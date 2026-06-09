@@ -2,10 +2,12 @@ name: Update Data DSSD
 
 on:
   schedule:
-    # Setiap hari jam 07:00 dan 13:00 WITA (00:00 dan 06:00 UTC)
     - cron: '0 0 * * *'
     - cron: '0 6 * * *'
-  workflow_dispatch: # Bisa dijalankan manual dari GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update:
@@ -23,9 +25,8 @@ jobs:
             "https://sipd.go.id/ewalidata/${{ secrets.SESSION_TOKEN }}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda=6403" \
             -o raw_response.json
 
-          # Cek apakah response valid JSON dengan field "data"
           python3 - <<'EOF'
-          import json, sys, os
+          import json, sys
           from datetime import datetime
 
           with open('raw_response.json') as f:
@@ -34,18 +35,16 @@ jobs:
           try:
               data = json.loads(content)
           except:
-              print("Response bukan JSON yang valid, skip update.")
+              print("Response bukan JSON valid, skip.")
               sys.exit(0)
 
           if 'data' not in data or not isinstance(data['data'], list) or len(data['data']) == 0:
-              print("Field 'data' tidak ditemukan atau kosong, skip update.")
+              print("Data kosong atau tidak valid, skip.")
               sys.exit(0)
 
-          # Strip field 'skpd' agar file tidak terlalu besar
           for row in data['data']:
               row.pop('skpd', None)
 
-          # Tambahkan metadata
           output = {
               "data": data['data'],
               "meta": {
@@ -59,14 +58,13 @@ jobs:
           with open('data/rekap.json', 'w') as f:
               json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
 
-          print(f"Berhasil: {len(data['data'])} urusan diperbarui.")
+          print(f"Berhasil: {len(data['data'])} urusan.")
           EOF
 
-      - name: Commit dan push jika ada perubahan
+      - name: Commit dan push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/rekap.json
           git diff --staged --quiet || git commit -m "chore: update data DSSD $(date +'%Y-%m-%d %H:%M') UTC"
           git push
-
