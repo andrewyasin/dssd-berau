@@ -522,11 +522,14 @@ function renderStats() {
   }, 200);
 }
 
+// Kode urusan yang tidak ditangani Pemkab Berau — disembunyikan dari tampilan
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07'];
+
 async function loadData() {
   try {
     const res = await fetch('data/rekap.json?_=' + Date.now());
     const json = await res.json();
-    allData = json.data || [];
+    allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
 
     const meta = json.meta || {};
     const updated = meta.last_updated
