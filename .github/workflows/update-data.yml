@@ -42,11 +42,17 @@ jobs:
               print("Data kosong atau tidak valid, skip.")
               sys.exit(0)
 
+          # Kode urusan yang tidak ditangani Pemkab Berau
+          EXCLUDE_KODE = {'3.28', '3.29', '5.06', '5.07'}
+
+          filtered = []
           for row in data['data']:
               row.pop('skpd', None)
+              if row.get('kodeurusan') not in EXCLUDE_KODE:
+                  filtered.append(row)
 
           output = {
-              "data": data['data'],
+              "data": filtered,
               "meta": {
                   "last_updated": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S+08:00'),
                   "source": "e-Walidata SIPD",
@@ -58,7 +64,7 @@ jobs:
           with open('data/rekap.json', 'w') as f:
               json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
 
-          print(f"Berhasil: {len(data['data'])} urusan.")
+          print(f"Berhasil: {len(filtered)} urusan tersimpan (dari {len(data['data'])} total).")
           EOF
 
       - name: Commit dan push
