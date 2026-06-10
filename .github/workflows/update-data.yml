@@ -29,6 +29,7 @@ jobs:
           USERNAME  = os.environ["SIPD_USERNAME"]
           PASSWORD  = os.environ["SIPD_PASSWORD"]
           KODEPEMDA = "6403"
+          DOMAIN    = "beraukab.sipd.kemendagri.go.id"
           TAHUN     = "2025"
           EXCLUDE   = {"3.28","3.29","5.06","5.07"}
           BASE      = "https://sipd.go.id/ewalidata"
@@ -38,77 +39,88 @@ jobs:
               "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120",
               "Accept": "application/json, text/javascript, */*; q=0.01",
               "X-Requested-With": "XMLHttpRequest",
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           })
 
-          # Step 1: GET halaman awal
-          print("=== Step 1: Akses halaman awal ===")
-          try:
-              r0 = s.get(BASE + "/", timeout=30)
-              print(f"Status: {r0.status_code}, URL: {r0.url}")
-          except Exception as e:
-              print(f"Error: {e}")
+          # Step 1: GET halaman awal untuk init session
+          print("=== Step 1: Init session ===")
+          r0 = s.get(BASE + "/a/", timeout=30)
+          print(f"Status: {r0.status_code}")
 
-          # Step 2: Cari pemda
+          # Step 2: Cari pemda untuk dapat token awal
           print("=== Step 2: Cari pemda ===")
-          try:
-              r1 = s.get(BASE + "/a/?m=login&f=list_pemda&q=berau", timeout=30)
-              print(f"Status: {r1.status_code}")
-              print(f"Response: {r1.text[:300]}")
-          except Exception as e:
-              print(f"Error: {e}")
+          r1 = s.get(f"{BASE}/a/?m=login&f=list_pemda&q=berau", timeout=30)
+          print(f"Status: {r1.status_code}, Response: {r1.text[:200]}")
 
-          # Step 3: Login POST
+          # Step 3: Coba berbagai format login
           print("=== Step 3: Login ===")
-          payload = {
-              "m": "login", "f": "proses",
-              "username": USERNAME, "password": PASSWORD,
-              "kodepemda": KODEPEMDA, "tahun": TAHUN,
-          }
-          try:
-              r2 = s.post(BASE + "/a/", data=payload, timeout=30, allow_redirects=True)
-              print(f"Status: {r2.status_code}, URL akhir: {r2.url}")
-              print(f"Cookies: {dict(s.cookies)}")
-              print(f"Response: {r2.text[:400]}")
-          except Exception as e:
-              print(f"Error login: {e}")
-              sys.exit(1)
 
-          # Cari session token dari URL
+          # Format A — pakai domain sebagai kodepemda
+          payloads = [
+              {
+                  "m": "login", "f": "proses",
+                  "username": USERNAME, "password": PASSWORD,
+                  "kodepemda": DOMAIN, "tahun": TAHUN,
+              },
+              {
+                  "m": "login", "f": "proses",
+                  "username": USERNAME, "password": PASSWORD,
+                  "kodepemda": KODEPEMDA, "tahun": TAHUN,
+                  "domain": DOMAIN,
+              },
+              {
+                  "m": "login", "f": "proses",
+                  "user": USERNAME, "pass": PASSWORD,
+                  "kodepemda": DOMAIN, "tahun": TAHUN,
+              },
+              {
+                  "m": "login", "f": "proses",
+                  "username": USERNAME, "password": PASSWORD,
+                  "pemda": DOMAIN, "tahun": TAHUN,
+              },
+          ]
+
           token = None
-          for resp in list(r2.history) + [r2]:
-              m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
-              if m:
-                  token = m.group(1)
-                  print(f"Token: {token}")
-                  break
+          for i, payload in enumerate(payloads):
+              print(f"--- Coba format {i+1}: {list(payload.keys())} ---")
+              try:
+                  r2 = s.post(f"{BASE}/a/", data=payload, timeout=30, allow_redirects=True)
+                  print(f"Status: {r2.status_code}, URL: {r2.url}")
+                  print(f"Cookies: {dict(s.cookies)}")
+                  print(f"Response: {r2.text[:200]}")
+
+                  # Cek apakah berhasil redirect ke dashboard
+                  for resp in list(r2.history) + [r2]:
+                      m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
+                      if m:
+                          token = m.group(1)
+                          print(f"TOKEN DITEMUKAN: {token}")
+                          break
+
+                  if token:
+                      break
+              except Exception as e:
+                  print(f"Error: {e}")
 
           if not token:
-              print("GAGAL: session token tidak ditemukan. Login gagal.")
+              print("SEMUA FORMAT GAGAL. Perlu investigasi lebih lanjut.")
               sys.exit(1)
 
           # Step 4: Set cookie pemda
-          s.cookies.set(
-              "pemda",
-              "%7B%22domain%22%3A%22beraukab.sipd.kemendagri.go.id%22%2C%22nama%22%3A%22KAB.+BERAU%22%7D",
-              domain="sipd.go.id"
-          )
+          import urllib.parse
+          pemda_val = urllib.parse.quote(json.dumps({"domain": DOMAIN, "nama": "KAB. BERAU"}))
+          s.cookies.set("pemda", pemda_val, domain="sipd.go.id")
 
           # Step 5: Fetch rekap DSSD
           print("=== Step 4: Fetch data rekap ===")
           url = f"{BASE}/{token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}"
-          try:
-              r3 = s.get(url, timeout=30)
-              print(f"Status: {r3.status_code}")
-              print(f"Response: {r3.text[:300]}")
-          except Exception as e:
-              print(f"Error fetch: {e}")
-              sys.exit(1)
+          r3 = s.get(url, timeout=30)
+          print(f"Status: {r3.status_code}, Response: {r3.text[:300]}")
 
-          # Step 6: Parse JSON
           try:
               data = r3.json()
           except Exception as e:
-              print(f"Bukan JSON: {e} | Raw: {r3.text[:400]}")
+              print(f"Bukan JSON: {r3.text[:400]}")
               sys.exit(1)
 
           if "data" not in data or not data["data"]:
