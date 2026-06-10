@@ -45,49 +45,47 @@ jobs:
               "Accept-Language": "id-ID,id;q=0.9",
           })
 
-          # Step 1: GET halaman login untuk ambil _token dan action URL
+          # Step 1: GET halaman login
           print("=== Step 1: Ambil halaman login ===")
           r0 = s.get(f"{BASE}/ewalidata/a/", timeout=30)
           print(f"Status: {r0.status_code}, URL: {r0.url}")
 
           soup = BeautifulSoup(r0.text, "html.parser")
           form = soup.find("form", id="loginform") or soup.find("form")
-
           if not form:
-              print("Form login tidak ditemukan!")
-              print(f"HTML: {r0.text[:500]}")
+              print("Form tidak ditemukan!")
               sys.exit(1)
 
-          action = form.get("action", "")
-          print(f"Form action: {action}")
+          action     = form.get("action", "")
+          csrf_token = (form.find("input", {"name": "_token"}) or {}).get("value", "")
+          print(f"Action: {action}")
+          print(f"CSRF: {csrf_token[:20]}...")
 
-          token_input = form.find("input", {"name": "_token"})
-          csrf_token = token_input["value"] if token_input else ""
-          print(f"CSRF token: {csrf_token[:20]}...")
-
-          tahun_select = form.find("select", {"name": "tahun"})
+          # Ambil tahun pertama dari select
+          tahun_sel = form.find("select", {"name": "tahun"})
           tahun_val = TAHUN
-          if tahun_select:
-              opts = tahun_select.find_all("option")
-              if opts:
-                  tahun_val = opts[0].get("value", TAHUN)
+          if tahun_sel:
+              opts = tahun_sel.find_all("option")
+              # Cari option yang valuenya 2025
+              for o in opts:
+                  if o.get("value","") == TAHUN:
+                      tahun_val = TAHUN
+                      break
+              else:
+                  if opts:
+                      tahun_val = opts[0].get("value", TAHUN)
           print(f"Tahun: {tahun_val}")
 
           # Step 2: POST login
           print("=== Step 2: Login ===")
-          if action.startswith("/"):
-              login_url = f"{BASE}{action}"
-          elif action.startswith("http"):
-              login_url = action
-          else:
-              login_url = f"{BASE}/ewalidata/a/"
-
+          login_url = f"{BASE}{action}" if action.startswith("/") else (action if action.startswith("http") else f"{BASE}/ewalidata/a/")
           print(f"Login URL: {login_url}")
 
           s.headers.update({
               "Content-Type": "application/x-www-form-urlencoded",
               "Referer": f"{BASE}/ewalidata/a/",
               "Origin": BASE,
+              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           })
 
           payload = {
@@ -99,22 +97,19 @@ jobs:
               "_token":    csrf_token,
               "submit":    "1",
           }
-          print(f"Payload keys: {list(payload.keys())}")
 
           r1 = s.post(login_url, data=payload, timeout=30, allow_redirects=True)
           print(f"Status: {r1.status_code}, URL akhir: {r1.url}")
-          print(f"Cookies: {dict(s.cookies)}")
-          print(f"Response awal: {r1.text[:300]}")
+          print(f"Semua cookies setelah login: {dict(s.cookies)}")
 
-          # Cari session token dari URL atau response
+          # Cari session token
           session_token = None
           for resp in list(r1.history) + [r1]:
               m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
               if m:
                   session_token = m.group(1)
-                  print(f"Session token (dari URL): {session_token}")
+                  print(f"Session token: {session_token}")
                   break
-
           if not session_token:
               m2 = re.search(r"/ewalidata/([a-f0-9]{40})/", r1.text)
               if m2:
@@ -122,25 +117,36 @@ jobs:
                   print(f"Session token (dari HTML): {session_token}")
 
           if not session_token:
-              print("GAGAL: session token tidak ditemukan.")
-              print(f"History URLs: {[r.url for r in r1.history]}")
+              print("GAGAL: session token tidak ditemukan")
               sys.exit(1)
 
-          # Step 3: Set cookie pemda
-          pemda_json = json.dumps({"domain": SUBDOMAIN, "nama": "KAB. BERAU"})
-          s.cookies.set("pemda", requests.utils.quote(pemda_json), domain="sipd.go.id")
+          # Step 3: GET dashboard dulu untuk memastikan session aktif
+          print("=== Step 3: Aktivasi session via dashboard ===")
+          s.headers.update({
+              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+              "Referer": f"{BASE}/ewalidata/{session_token}/",
+          })
+          r_dash = s.get(f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard", timeout=30)
+          print(f"Dashboard status: {r_dash.status_code}")
+          print(f"Dashboard title: {re.search(r'<title>(.*?)</title>', r_dash.text, re.IGNORECASE).group(1) if re.search(r'<title>(.*?)</title>', r_dash.text, re.IGNORECASE) else 'tidak ditemukan'}")
+          print(f"Cookies setelah dashboard: {dict(s.cookies)}")
 
           # Step 4: Fetch rekap DSSD
-          print("=== Step 3: Fetch rekap DSSD ===")
+          print("=== Step 4: Fetch rekap DSSD ===")
           s.headers.update({
               "Accept": "application/json, text/javascript, */*; q=0.01",
               "X-Requested-With": "XMLHttpRequest",
               "Referer": f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=keterisian&kodepemda={KODEPEMDA}",
+              "Content-Type": None,
           })
-          url = f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}"
-          r2 = s.get(url, timeout=30)
+          # Hapus Content-Type agar tidak interferensi
+          s.headers.pop("Content-Type", None)
+
+          fetch_url = f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}&_={int(datetime.now().timestamp()*1000)}"
+          print(f"Fetch URL: {fetch_url}")
+          r2 = s.get(fetch_url, timeout=30)
           print(f"Status: {r2.status_code}")
-          print(f"Response: {r2.text[:300]}")
+          print(f"Response (300 char): {r2.text[:300]}")
 
           try:
               data = r2.json()
@@ -149,9 +155,10 @@ jobs:
               sys.exit(1)
 
           if "data" not in data or not data["data"]:
-              print(f"Data kosong: {data}")
+              print(f"Data kosong: {str(data)[:300]}")
               sys.exit(1)
 
+          # Step 5: Simpan
           filtered = []
           for row in data["data"]:
               row.pop("skpd", None)
