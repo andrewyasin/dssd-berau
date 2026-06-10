@@ -2,8 +2,9 @@ name: Update Data DSSD
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-    - cron: '0 6 * * *'
+    - cron: '0 0 * * *'   # 08:00 WITA
+    - cron: '0 6 * * *'   # 14:00 WITA
+    - cron: '0 23 * * *'  # 07:00 WITA
   workflow_dispatch:
 
 permissions:
@@ -16,56 +17,152 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch data dari SIPD e-Walidata
+      - name: Login & Fetch data SIPD e-Walidata
+        env:
+          SIPD_USERNAME: ${{ secrets.SIPD_USERNAME }}
+          SIPD_PASSWORD: ${{ secrets.SIPD_PASSWORD }}
         run: |
-          curl -s \
-            -H "Cookie: PHPSESSID=${{ secrets.PHPSESSID }}; pemda=${{ secrets.PEMDA_COOKIE }}" \
-            -H "X-Requested-With: XMLHttpRequest" \
-            -H "Referer: https://sipd.go.id/ewalidata/${{ secrets.SESSION_TOKEN }}/?m=daerah_dashboard&f=keterisian&kodepemda=6403" \
-            "https://sipd.go.id/ewalidata/${{ secrets.SESSION_TOKEN }}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda=6403" \
-            -o raw_response.json
-
           python3 - <<'EOF'
-          import json, sys
-          from datetime import datetime
+import requests
+import json
+import sys
+import re
+from datetime import datetime
 
-          with open('raw_response.json') as f:
-              content = f.read()
+USERNAME  = "${{ secrets.SIPD_USERNAME }}"
+PASSWORD  = "${{ secrets.SIPD_PASSWORD }}"
+KODEPEMDA = "6403"
+TAHUN     = "2025"
 
-          try:
-              data = json.loads(content)
-          except:
-              print("Response bukan JSON valid, skip.")
-              sys.exit(0)
+EXCLUDE_KODE = {'3.28', '3.29', '5.06', '5.07'}
 
-          if 'data' not in data or not isinstance(data['data'], list) or len(data['data']) == 0:
-              print("Data kosong atau tidak valid, skip.")
-              sys.exit(0)
+BASE_URL = "https://sipd.go.id/ewalidata"
 
-          # Kode urusan yang tidak ditangani Pemkab Berau
-          EXCLUDE_KODE = {'3.28', '3.29', '5.06', '5.07'}
+session = requests.Session()
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Requested-With": "XMLHttpRequest",
+})
 
-          filtered = []
-          for row in data['data']:
-              row.pop('skpd', None)
-              if row.get('kodeurusan') not in EXCLUDE_KODE:
-                  filtered.append(row)
+# ── LANGKAH 1: GET halaman awal untuk ambil token/session awal ──
+print("1. Mengakses halaman awal SIPD...")
+try:
+    r0 = session.get(BASE_URL + "/", timeout=30)
+    print(f"   Status: {r0.status_code}")
+except Exception as e:
+    print(f"   Gagal akses awal: {e}")
 
-          output = {
-              "data": filtered,
-              "meta": {
-                  "last_updated": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S+08:00'),
-                  "source": "e-Walidata SIPD",
-                  "tahun": "2025",
-                  "kodepemda": "6403"
-              }
-          }
+# ── LANGKAH 2: Cari pemda (autocomplete) ──
+print("2. Mencari kode pemda...")
+try:
+    r1 = session.get(
+        BASE_URL + "/a/?m=login&f=list_pemda&q=berau",
+        timeout=30
+    )
+    print(f"   Status: {r1.status_code}")
+    print(f"   Response: {r1.text[:200]}")
+except Exception as e:
+    print(f"   Gagal cari pemda: {e}")
 
-          with open('data/rekap.json', 'w') as f:
-              json.dump(output, f, ensure_ascii=False, separators=(',', ':'))
+# ── LANGKAH 3: Login ──
+print("3. Melakukan login...")
+login_payload = {
+    "m":         "login",
+    "f":         "proses",
+    "username":  USERNAME,
+    "password":  PASSWORD,
+    "kodepemda": KODEPEMDA,
+    "tahun":     TAHUN,
+}
 
-          print(f"Berhasil: {len(filtered)} urusan tersimpan (dari {len(data['data'])} total).")
-          EOF
+try:
+    r2 = session.post(
+        BASE_URL + "/a/",
+        data=login_payload,
+        timeout=30,
+        allow_redirects=True
+    )
+    print(f"   Status: {r2.status_code}")
+    print(f"   URL akhir: {r2.url}")
+    print(f"   Cookies: {dict(session.cookies)}")
+    print(f"   Response awal: {r2.text[:300]}")
+except Exception as e:
+    print(f"   Gagal login: {e}")
+    sys.exit(1)
+
+# Ambil session token dari URL (40 karakter hex setelah /ewalidata/)
+session_token = None
+match = re.search(r'/ewalidata/([a-f0-9]{40})/', r2.url)
+if match:
+    session_token = match.group(1)
+    print(f"   Session token: {session_token}")
+else:
+    # Coba dari history redirect
+    for resp in r2.history:
+        m2 = re.search(r'/ewalidata/([a-f0-9]{40})/', resp.url)
+        if m2:
+            session_token = m2.group(1)
+            print(f"   Session token (dari redirect): {session_token}")
+            break
+
+if not session_token:
+    print("   GAGAL mendapatkan session token. Login mungkin gagal.")
+    print(f"   Response lengkap: {r2.text[:500]}")
+    sys.exit(1)
+
+# ── LANGKAH 4: Set cookie pemda ──
+session.cookies.set(
+    "pemda",
+    f'%7B%22domain%22%3A%22beraukab.sipd.kemendagri.go.id%22%2C%22nama%22%3A%22KAB.+BERAU%22%7D',
+    domain="sipd.go.id"
+)
+
+# ── LANGKAH 5: Fetch rekap tahapan DSSD ──
+print("4. Fetch data rekap DSSD...")
+fetch_url = f"{BASE_URL}/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}"
+
+try:
+    r3 = session.get(fetch_url, timeout=30)
+    print(f"   Status: {r3.status_code}")
+    print(f"   Response awal: {r3.text[:200]}")
+except Exception as e:
+    print(f"   Gagal fetch data: {e}")
+    sys.exit(1)
+
+# ── LANGKAH 6: Parse & simpan ──
+try:
+    data = r3.json()
+except Exception as e:
+    print(f"   Response bukan JSON: {e}")
+    print(f"   Raw: {r3.text[:500]}")
+    sys.exit(1)
+
+if "data" not in data or not isinstance(data["data"], list) or len(data["data"]) == 0:
+    print(f"   Data kosong atau format tidak valid: {data}")
+    sys.exit(1)
+
+filtered = []
+for row in data["data"]:
+    row.pop("skpd", None)
+    if row.get("kodeurusan") not in EXCLUDE_KODE:
+        filtered.append(row)
+
+output = {
+    "data": filtered,
+    "meta": {
+        "last_updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+        "source": "e-Walidata SIPD",
+        "tahun": TAHUN,
+        "kodepemda": KODEPEMDA,
+    }
+}
+
+with open("data/rekap.json", "w", encoding="utf-8") as f:
+    json.dump(output, f, ensure_ascii=False, separators=(",", ":"))
+
+print(f"   Berhasil: {len(filtered)} urusan tersimpan.")
+EOF
 
       - name: Commit dan push
         run: |
