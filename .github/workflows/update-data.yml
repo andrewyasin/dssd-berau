@@ -38,132 +38,145 @@ jobs:
           EXCLUDE   = {"3.28","3.29","5.06","5.07"}
           BASE      = "https://sipd.go.id"
 
-          s = requests.Session()
-          s.headers.update({
-              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-              "Accept-Language": "id-ID,id;q=0.9",
-          })
+          def make_session():
+              s = requests.Session()
+              s.headers.update({
+                  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+                  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                  "Accept-Language": "id-ID,id;q=0.9",
+              })
+              return s
 
-          # Step 1: GET halaman login
-          print("=== Step 1: Ambil halaman login ===")
-          r0 = s.get(f"{BASE}/ewalidata/a/", timeout=30)
-          print(f"Status: {r0.status_code}, URL: {r0.url}")
+          def get_login_form(s):
+              r = s.get(f"{BASE}/ewalidata/a/", timeout=30)
+              soup = BeautifulSoup(r.text, "html.parser")
+              form = soup.find("form", id="loginform") or soup.find("form")
+              if not form:
+                  return None, None, None, None
+              action = form.get("action", f"{BASE}/ewalidata/a/")
+              if action.startswith("/"):
+                  action = BASE + action
+              csrf = (form.find("input", {"name": "_token"}) or {}).get("value", "")
+              # Ambil semua option tahun
+              sel = form.find("select", {"name": "tahun"})
+              tahun = TAHUN
+              if sel:
+                  for o in sel.find_all("option"):
+                      if o.get("value","") == TAHUN:
+                          tahun = TAHUN
+                          break
+                  else:
+                      opts = sel.find_all("option")
+                      if opts: tahun = opts[0].get("value", TAHUN)
+              return action, csrf, tahun, soup
 
-          soup = BeautifulSoup(r0.text, "html.parser")
-          form = soup.find("form", id="loginform") or soup.find("form")
-          if not form:
-              print("Form tidak ditemukan!")
-              sys.exit(1)
+          def try_login(s, action, csrf, tahun, extra_fields={}):
+              payload = {
+                  "subdomain": SUBDOMAIN,
+                  "username":  USERNAME,
+                  "user":      USERNAME,
+                  "password":  PASSWORD,
+                  "tahun":     tahun,
+                  "_token":    csrf,
+                  "submit":    "1",
+              }
+              payload.update(extra_fields)
+              s.headers.update({
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "Referer": f"{BASE}/ewalidata/a/",
+                  "Origin":  BASE,
+                  "Accept":  "text/html,application/xhtml+xml,*/*;q=0.9",
+              })
+              r = s.post(action, data=payload, timeout=30, allow_redirects=True)
+              print(f"  POST status: {r.status_code}, URL: {r.url}")
+              print(f"  Cookies: {dict(s.cookies)}")
+              # Cek apakah title adalah dashboard (bukan login)
+              title_m = re.search(r"<title>(.*?)</title>", r.text, re.IGNORECASE)
+              title = title_m.group(1) if title_m else "?"
+              print(f"  Title: {title}")
+              # Cari session token dari URL history
+              for resp in list(r.history) + [r]:
+                  m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
+                  if m:
+                      token = m.group(1)
+                      # Validasi: visit dashboard dan cek title
+                      s.headers.update({"Accept": "text/html,*/*;q=0.9"})
+                      rd = s.get(f"{BASE}/ewalidata/{token}/?m=daerah_dashboard", timeout=30)
+                      td = re.search(r"<title>(.*?)</title>", rd.text, re.IGNORECASE)
+                      td_title = td.group(1) if td else "?"
+                      print(f"  Dashboard title: {td_title}")
+                      if "Login" not in td_title and "login" not in td_title:
+                          print(f"  LOGIN BERHASIL! Token: {token}")
+                          return token, s
+              return None, s
 
-          action     = form.get("action", "")
-          csrf_token = (form.find("input", {"name": "_token"}) or {}).get("value", "")
-          print(f"Action: {action}")
-          print(f"CSRF: {csrf_token[:20]}...")
-
-          # Ambil tahun pertama dari select
-          tahun_sel = form.find("select", {"name": "tahun"})
-          tahun_val = TAHUN
-          if tahun_sel:
-              opts = tahun_sel.find_all("option")
-              # Cari option yang valuenya 2025
-              for o in opts:
-                  if o.get("value","") == TAHUN:
-                      tahun_val = TAHUN
-                      break
-              else:
-                  if opts:
-                      tahun_val = opts[0].get("value", TAHUN)
-          print(f"Tahun: {tahun_val}")
-
-          # Step 2: POST login
-          print("=== Step 2: Login ===")
-          login_url = f"{BASE}{action}" if action.startswith("/") else (action if action.startswith("http") else f"{BASE}/ewalidata/a/")
-          print(f"Login URL: {login_url}")
-
-          s.headers.update({
-              "Content-Type": "application/x-www-form-urlencoded",
-              "Referer": f"{BASE}/ewalidata/a/",
-              "Origin": BASE,
-              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          })
-
-          payload = {
-              "subdomain": SUBDOMAIN,
-              "username":  USERNAME,
-              "user":      USERNAME,
-              "password":  PASSWORD,
-              "tahun":     tahun_val,
-              "_token":    csrf_token,
-              "submit":    "1",
-          }
-
-          r1 = s.post(login_url, data=payload, timeout=30, allow_redirects=True)
-          print(f"Status: {r1.status_code}, URL akhir: {r1.url}")
-          print(f"Semua cookies setelah login: {dict(s.cookies)}")
-
-          # Cari session token
+          # ── Percobaan login ──
           session_token = None
-          for resp in list(r1.history) + [r1]:
-              m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
-              if m:
-                  session_token = m.group(1)
-                  print(f"Session token: {session_token}")
-                  break
+
+          # Percobaan 1: field standar
+          print("=== Percobaan 1: field standar ===")
+          s = make_session()
+          action, csrf, tahun, _ = get_login_form(s)
+          print(f"Action: {action}, CSRF: {csrf[:15]}..., Tahun: {tahun}")
+          session_token, s = try_login(s, action, csrf, tahun)
+
+          # Percobaan 2: tanpa field 'user', hanya 'username'
           if not session_token:
-              m2 = re.search(r"/ewalidata/([a-f0-9]{40})/", r1.text)
-              if m2:
-                  session_token = m2.group(1)
-                  print(f"Session token (dari HTML): {session_token}")
+              print("=== Percobaan 2: hanya field username ===")
+              s = make_session()
+              action, csrf, tahun, _ = get_login_form(s)
+              session_token, s = try_login(s, action, csrf, tahun, {"user": ""})
+
+          # Percobaan 3: username lowercase admin6403
+          if not session_token:
+              print("=== Percobaan 3: username admin6403 hardcode ===")
+              s = make_session()
+              action, csrf, tahun, _ = get_login_form(s)
+              session_token, s = try_login(s, action, csrf, tahun, {
+                  "username": "admin6403", "user": "admin6403"
+              })
+
+          # Percobaan 4: POST ke URL berbeda (langsung ke session token URL)
+          if not session_token:
+              print("=== Percobaan 4: POST ke action URL dengan tahun 2026 ===")
+              s = make_session()
+              action, csrf, tahun, soup = get_login_form(s)
+              # Coba dengan tahun 2026 (dari log sebelumnya tahun yg muncul adalah 2026)
+              session_token, s = try_login(s, action, csrf, "2026")
 
           if not session_token:
-              print("GAGAL: session token tidak ditemukan")
+              print("SEMUA PERCOBAAN GAGAL.")
               sys.exit(1)
 
-          # Step 3: GET dashboard dulu untuk memastikan session aktif
-          print("=== Step 3: Aktivasi session via dashboard ===")
-          s.headers.update({
-              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-              "Referer": f"{BASE}/ewalidata/{session_token}/",
-          })
-          r_dash = s.get(f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard", timeout=30)
-          print(f"Dashboard status: {r_dash.status_code}")
-          print(f"Dashboard title: {re.search(r'<title>(.*?)</title>', r_dash.text, re.IGNORECASE).group(1) if re.search(r'<title>(.*?)</title>', r_dash.text, re.IGNORECASE) else 'tidak ditemukan'}")
-          print(f"Cookies setelah dashboard: {dict(s.cookies)}")
-
-          # Step 4: Fetch rekap DSSD
-          print("=== Step 4: Fetch rekap DSSD ===")
+          # ── Fetch rekap DSSD ──
+          print(f"=== Fetch rekap DSSD dengan token: {session_token} ===")
           s.headers.update({
               "Accept": "application/json, text/javascript, */*; q=0.01",
               "X-Requested-With": "XMLHttpRequest",
               "Referer": f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=keterisian&kodepemda={KODEPEMDA}",
-              "Content-Type": None,
           })
-          # Hapus Content-Type agar tidak interferensi
           s.headers.pop("Content-Type", None)
 
-          fetch_url = f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}&_={int(datetime.now().timestamp()*1000)}"
-          print(f"Fetch URL: {fetch_url}")
-          r2 = s.get(fetch_url, timeout=30)
-          print(f"Status: {r2.status_code}")
-          print(f"Response (300 char): {r2.text[:300]}")
+          ts = int(datetime.now().timestamp() * 1000)
+          url = f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}&_={ts}"
+          r = s.get(url, timeout=30)
+          print(f"Status: {r.status_code}, Response: {r.text[:200]}")
 
           try:
-              data = r2.json()
-          except Exception as e:
-              print(f"Bukan JSON: {e}")
+              data = r.json()
+          except:
+              print(f"Bukan JSON: {r.text[:400]}")
               sys.exit(1)
 
           if "data" not in data or not data["data"]:
-              print(f"Data kosong: {str(data)[:300]}")
+              print(f"Data kosong: {str(data)[:200]}")
               sys.exit(1)
 
-          # Step 5: Simpan
-          filtered = []
-          for row in data["data"]:
-              row.pop("skpd", None)
-              if row.get("kodeurusan") not in EXCLUDE:
-                  filtered.append(row)
+          filtered = [
+              {k:v for k,v in row.items() if k != "skpd"}
+              for row in data["data"]
+              if row.get("kodeurusan") not in EXCLUDE
+          ]
 
           output = {
               "data": filtered,
@@ -174,7 +187,6 @@ jobs:
                   "kodepemda": KODEPEMDA,
               }
           }
-
           with open("data/rekap.json", "w", encoding="utf-8") as f:
               json.dump(output, f, ensure_ascii=False, separators=(",",":"))
 
