@@ -5,303 +5,327 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rekap Tahapan DSSD — KAB. BERAU 2025</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #0D1B2A;
-  --navy2: #1B2D42;
-  --navy3: #243447;
-  --teal: #00C9A7;
-  --teal2: #00A886;
-  --teal3: rgba(0,201,167,0.12);
-  --amber: #FFB830;
-  --red: #FF5252;
-  --blue: #4FC3F7;
-  --white: #F0F4F8;
-  --white2: #C8D6E5;
-  --muted: #8A9BB0;
-  --border: rgba(255,255,255,0.06);
-  --card: rgba(255,255,255,0.04);
-  --font: 'DM Sans', sans-serif;
-  --mono: 'DM Mono', monospace;
+  /* Palet Pemkab Berau */
+  --hijau:        #1A6B2F;
+  --hijau-tua:    #134D22;
+  --hijau-gelap:  #0D3618;
+  --hijau-muda:   #218A3C;
+  --hijau-terang: rgba(26,107,47,0.15);
+  --hijau-rim:    rgba(26,107,47,0.35);
+  --emas:         #D4A017;
+  --emas-terang:  #F0C040;
+  --emas-muda:    rgba(212,160,23,0.15);
+  --emas-rim:     rgba(212,160,23,0.4);
+  --merah:        #C0392B;
+  --merah-muda:   rgba(192,57,43,0.15);
+  --putih:        #F7F9F4;
+  --putih2:       #D6E4D9;
+  --abu:          #7A9A80;
+  --border:       rgba(255,255,255,0.08);
+  --border-emas:  rgba(212,160,23,0.25);
+  --card:         rgba(255,255,255,0.05);
+  --font:         'Plus Jakarta Sans', sans-serif;
+  --mono:         'DM Mono', monospace;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font);
-  background: var(--navy);
-  color: var(--white);
+  background: var(--hijau-gelap);
+  color: var(--putih);
   min-height: 100vh;
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* ---- HEADER ---- */
+/* ===== HEADER ===== */
 .site-header {
-  background: var(--navy2);
-  border-bottom: 1px solid var(--border);
+  background: var(--hijau-tua);
+  border-bottom: 2px solid var(--emas);
   padding: 0 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 68px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
 }
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.logo-icon {
-  width: 36px; height: 36px;
-  background: var(--teal);
-  border-radius: 8px;
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo-emblem {
+  width: 44px; height: 44px;
+  border: 2px solid var(--emas);
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 600; color: var(--navy);
+  background: var(--hijau);
+  font-size: 20px;
+  box-shadow: 0 0 0 3px rgba(212,160,23,0.15);
 }
-.logo-text { font-size: 14px; font-weight: 600; color: var(--white); }
-.logo-sub { font-size: 11px; color: var(--muted); font-weight: 400; }
-.header-right { display: flex; align-items: center; gap: 12px; }
+.logo-info {}
+.logo-text {
+  font-size: 14px; font-weight: 700;
+  color: var(--emas-terang);
+  letter-spacing: .01em;
+}
+.logo-sub { font-size: 11px; color: var(--putih2); font-weight: 400; }
+.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .live-dot {
   display: flex; align-items: center; gap: 6px;
-  font-size: 12px; color: var(--teal); font-family: var(--mono);
+  font-size: 11px; color: var(--emas-terang); font-family: var(--mono);
 }
 .live-dot::before {
   content: '';
   width: 7px; height: 7px;
-  background: var(--teal);
+  background: var(--emas-terang);
   border-radius: 50%;
-  animation: pulse 2s infinite;
+  animation: blink 2s infinite;
 }
-@keyframes pulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 .year-badge {
-  background: var(--teal3);
-  color: var(--teal);
-  font-size: 12px; font-weight: 600;
-  padding: 4px 10px; border-radius: 6px;
+  background: var(--emas-muda);
+  color: var(--emas-terang);
+  font-size: 12px; font-weight: 700;
+  padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--border-emas);
   font-family: var(--mono);
+  letter-spacing: .05em;
 }
-.last-updated { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.last-updated { font-size: 11px; color: var(--abu); font-family: var(--mono); }
 
-/* ---- MAIN ---- */
-main { max-width: 1280px; margin: 0 auto; padding: 2rem; }
-
-/* ---- HERO STATS ---- */
-.hero { margin-bottom: 2rem; }
+/* ===== BANNER JUDUL ===== */
+.hero-banner {
+  background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau) 60%, var(--hijau-muda) 100%);
+  border-bottom: 3px solid var(--emas);
+  padding: 2rem 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::before {
+  content: '🐢';
+  position: absolute; right: 2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px; opacity: .07;
+  user-select: none;
+}
+.hero-inner { max-width: 1280px; margin: 0 auto; }
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  color: var(--emas-terang); text-transform: uppercase;
+  margin-bottom: 6px;
+}
 .hero-title {
-  font-size: 22px; font-weight: 600;
-  color: var(--white);
+  font-size: 24px; font-weight: 700;
+  color: #fff;
   margin-bottom: 4px;
+  line-height: 1.3;
 }
-.hero-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+.hero-sub { font-size: 13px; color: var(--putih2); }
 
+/* ===== MAIN ===== */
+main { max-width: 1280px; margin: 0 auto; padding: 1.75rem 2rem; }
+
+/* ===== STAT CARDS ===== */
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
   gap: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 .stat-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1rem 1.25rem;
-  transition: border-color 0.2s;
+  transition: border-color .2s, transform .15s;
+  position: relative;
+  overflow: hidden;
 }
-.stat-card:hover { border-color: rgba(0,201,167,0.3); }
-.stat-card.accent { border-color: rgba(0,201,167,0.25); background: var(--teal3); }
-.sc-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
-.sc-value { font-size: 26px; font-weight: 600; font-family: var(--mono); color: var(--white); }
-.sc-value.green { color: var(--teal); }
-.sc-value.amber { color: var(--amber); }
-.sc-value.red { color: var(--red); }
-.sc-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--hijau-muda);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.stat-card:hover { border-color: var(--hijau-rim); transform: translateY(-1px); }
+.stat-card:hover::before { opacity: 1; }
+.stat-card.accent {
+  border-color: var(--border-emas);
+  background: var(--emas-muda);
+}
+.stat-card.accent::before { background: var(--emas); opacity: 1; }
+.sc-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--abu); margin-bottom: 8px;
+}
+.sc-value {
+  font-size: 28px; font-weight: 700;
+  font-family: var(--mono); color: var(--putih);
+}
+.sc-value.hijau { color: #5ECC6E; }
+.sc-value.emas  { color: var(--emas-terang); }
+.sc-value.merah { color: #FF6B6B; }
 
-/* ---- PROGRESS BAR OVERVIEW ---- */
+/* ===== PROGRESS ===== */
 .progress-section {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-emas);
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
 .ps-header {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: .75rem;
 }
-.ps-title { font-size: 13px; font-weight: 600; color: var(--white2); }
-.ps-pct { font-size: 20px; font-weight: 600; font-family: var(--mono); color: var(--teal); }
+.ps-title { font-size: 13px; font-weight: 600; color: var(--putih2); }
+.ps-pct {
+  font-size: 24px; font-weight: 700;
+  font-family: var(--mono); color: var(--emas-terang);
+}
 .progress-bar-wrap {
-  height: 10px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 999px;
-  overflow: hidden;
+  height: 12px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px; overflow: hidden;
   margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 .progress-bar-fill {
-  height: 100%;
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--hijau-muda), var(--emas-terang));
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.progress-bar-fill::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--teal) 0%, var(--teal2) 100%);
-  transition: width 1s ease;
 }
-.progress-legend {
-  display: flex; gap: 1.5rem; flex-wrap: wrap;
-}
-.pl-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
-.pl-dot { width: 8px; height: 8px; border-radius: 50%; }
+.progress-legend { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.pl-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--abu); }
+.pl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-/* ---- CONTROLS ---- */
+/* ===== CONTROLS ===== */
 .controls {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 1.25rem;
+  display: flex; gap: 8px; flex-wrap: wrap;
+  align-items: center; margin-bottom: 1rem;
 }
-.search-wrap {
-  position: relative; flex: 1; min-width: 200px;
-}
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
 .search-wrap input {
   width: 100%;
-  background: var(--card);
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px 8px 36px;
-  color: var(--white);
+  color: var(--putih);
   font-family: var(--font); font-size: 13px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color .2s;
 }
-.search-wrap input:focus { border-color: rgba(0,201,167,0.5); }
-.search-wrap input::placeholder { color: var(--muted); }
+.search-wrap input:focus { border-color: var(--emas); }
+.search-wrap input::placeholder { color: var(--abu); }
 .search-icon {
   position: absolute; left: 11px; top: 50%;
   transform: translateY(-50%);
-  color: var(--muted); font-size: 15px; pointer-events: none;
+  color: var(--abu); font-size: 15px; pointer-events: none;
 }
 .filter-btn {
-  background: var(--card);
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 7px 14px;
-  color: var(--muted); font-family: var(--font); font-size: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
+  border-radius: 8px; padding: 7px 13px;
+  color: var(--abu); font-family: var(--font); font-size: 12px;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+  font-weight: 500;
 }
-.filter-btn:hover, .filter-btn.active {
-  border-color: var(--teal);
-  color: var(--teal);
-  background: var(--teal3);
+.filter-btn:hover { border-color: var(--emas); color: var(--emas-terang); }
+.filter-btn.active {
+  border-color: var(--emas);
+  color: var(--hijau-gelap);
+  background: var(--emas);
+  font-weight: 600;
 }
 .sort-select {
-  background: var(--card);
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 7px 12px;
-  color: var(--muted); font-family: var(--font); font-size: 12px;
-  outline: none; cursor: pointer;
-  appearance: none;
-  padding-right: 28px;
+  border-radius: 8px; padding: 7px 12px;
+  color: var(--abu); font-family: var(--font); font-size: 12px;
+  outline: none; cursor: pointer; appearance: none;
 }
+.sort-select:focus { border-color: var(--emas); }
 
-/* ---- TABLE ---- */
+/* ===== TABLE ===== */
 .table-wrap {
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
-  overflow-x: auto;
+  overflow: hidden; overflow-x: auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 780px;
-}
+table { width: 100%; border-collapse: collapse; min-width: 780px; }
 thead th {
-  background: var(--navy2);
+  background: var(--hijau-tua);
   padding: 10px 14px;
   text-align: left;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .07em;
+  color: var(--emas-terang);
+  border-bottom: 2px solid var(--emas);
   white-space: nowrap;
-  user-select: none;
-  cursor: pointer;
 }
-thead th:hover { color: var(--white2); }
-thead th.sorted { color: var(--teal); }
-thead th .sort-arrow { margin-left: 4px; opacity: 0.5; }
-thead th.sorted .sort-arrow { opacity: 1; }
-tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
-  cursor: default;
-}
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: rgba(255,255,255,0.03); }
-td {
-  padding: 11px 14px;
-  font-size: 13px;
-  color: var(--white2);
-  vertical-align: middle;
-}
-.td-kode { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.td-nama { font-weight: 500; color: var(--white); max-width: 280px; }
-.td-nama span { font-size: 11px; font-weight: 400; color: var(--muted); display: block; }
+tbody tr:hover { background: rgba(26,107,47,0.2); }
+td { padding: 10px 14px; font-size: 13px; color: var(--putih2); vertical-align: middle; }
+.td-kode { font-family: var(--mono); font-size: 11px; color: var(--emas); font-weight: 500; }
+.td-nama { font-weight: 600; color: var(--putih); max-width: 280px; }
+.td-nama span { font-size: 10px; font-weight: 400; color: var(--abu); display: block; margin-top: 1px; }
 .td-num { font-family: var(--mono); font-size: 12px; text-align: right; }
-.td-num.total { color: var(--blue); }
-.td-bar-cell { width: 120px; }
+.td-num.total { color: var(--putih2); }
+.td-bar-cell { width: 130px; }
 .mini-bar-wrap {
-  height: 6px; background: rgba(255,255,255,0.08);
-  border-radius: 99px; overflow: hidden; margin-bottom: 3px;
+  height: 6px; background: rgba(255,255,255,0.07);
+  border-radius: 99px; overflow: hidden; margin-bottom: 4px;
 }
-.mini-bar {
-  height: 100%; border-radius: 99px;
-  background: var(--teal);
-  transition: width 0.6s ease;
-}
-.mini-bar.low { background: var(--red); }
-.mini-bar.mid { background: var(--amber); }
-.mini-pct { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+.mini-bar { height: 100%; border-radius: 99px; transition: width .6s ease; }
+.mini-bar.full  { background: linear-gradient(90deg, #218A3C, #5ECC6E); }
+.mini-bar.high  { background: linear-gradient(90deg, var(--hijau-muda), #8FD98F); }
+.mini-bar.mid   { background: linear-gradient(90deg, var(--emas), var(--emas-terang)); }
+.mini-bar.low   { background: linear-gradient(90deg, #C0392B, #E74C3C); }
+.mini-pct { font-size: 10px; color: var(--abu); font-family: var(--mono); }
 .tag {
-  display: inline-block; font-size: 10px; font-weight: 600;
-  padding: 2px 7px; border-radius: 4px;
-  font-family: var(--mono);
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 4px; font-family: var(--mono);
+  margin-left: 4px; letter-spacing: .03em;
 }
-.tag-full { background: rgba(0,201,167,0.15); color: var(--teal); }
-.tag-high { background: rgba(79,195,247,0.15); color: var(--blue); }
-.tag-mid  { background: rgba(255,184,48,0.15); color: var(--amber); }
-.tag-low  { background: rgba(255,82,82,0.15); color: var(--red); }
-.tag-zero { background: rgba(255,255,255,0.06); color: var(--muted); }
+.tag-full { background: rgba(94,204,110,.18); color: #5ECC6E; border: 1px solid rgba(94,204,110,.3); }
+.tag-high { background: rgba(26,107,47,.25); color: #8FD98F; border: 1px solid rgba(143,217,143,.25); }
+.tag-mid  { background: var(--emas-muda); color: var(--emas-terang); border: 1px solid var(--border-emas); }
+.tag-low  { background: var(--merah-muda); color: #FF6B6B; border: 1px solid rgba(192,57,43,.3); }
+.tag-zero { background: rgba(255,255,255,.05); color: var(--abu); border: 1px solid var(--border); }
 
-.empty-state {
-  text-align: center; padding: 4rem;
-  color: var(--muted); font-size: 13px;
-}
+.empty-state { text-align: center; padding: 4rem; color: var(--abu); font-size: 13px; }
 
-/* ---- FOOTER ---- */
+/* ===== FOOTER ===== */
 footer {
-  text-align: center;
-  padding: 2rem;
-  color: var(--muted);
-  font-size: 11px;
+  text-align: center; padding: 1.5rem 2rem;
+  color: var(--abu); font-size: 11px;
   border-top: 1px solid var(--border);
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  background: var(--hijau-tua);
 }
-footer a { color: var(--teal); text-decoration: none; }
+footer a { color: var(--emas-terang); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+.footer-divider { margin: 0 8px; opacity: .4; }
 
-/* ---- RESPONSIVE ---- */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
+  .site-header { padding: 0 1rem; height: auto; min-height: 60px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+  .hero-banner { padding: 1.25rem 1rem; }
   main { padding: 1rem; }
-  .site-header { padding: 0 1rem; }
+  .hero-banner::before { display: none; }
   .last-updated { display: none; }
-  .stat-cards { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -309,10 +333,10 @@ footer a { color: var(--teal); text-decoration: none; }
 
 <header class="site-header">
   <div class="logo">
-    <div class="logo-icon">e</div>
-    <div>
-      <div class="logo-text">e-Walidata · KAB. BERAU</div>
-      <div class="logo-sub">Rekap Tahapan DSSD</div>
+    <div class="logo-emblem">🛡️</div>
+    <div class="logo-info">
+      <div class="logo-text">PEMERINTAH KAB. BERAU</div>
+      <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
     </div>
   </div>
   <div class="header-right">
@@ -322,16 +346,19 @@ footer a { color: var(--teal); text-decoration: none; }
   </div>
 </header>
 
-<main>
-  <div class="hero">
-    <div class="hero-title">Rekap Keterisian Data DSSD</div>
-    <div class="hero-sub" id="hero-sub">Kabupaten Berau (6403) · Tahun 2025 · e-Walidata SIPD</div>
+<div class="hero-banner">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">⭐ Batiwakkal · Kabupaten Berau (6403)</div>
+    <div class="hero-title">Rekap Keterisian Data Statistik Sektoral Daerah</div>
+    <div class="hero-sub">Dashboard monitoring progress DSSD · e-Walidata SIPD · Tahun <span id="tahun-hero">2025</span></div>
   </div>
+</div>
 
+<main>
   <div class="stat-cards" id="stat-cards">
     <div class="stat-card accent">
       <div class="sc-label">Total Urusan</div>
-      <div class="sc-value green" id="s-urusan">—</div>
+      <div class="sc-value emas" id="s-urusan">—</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Data Induk</div>
@@ -343,43 +370,43 @@ footer a { color: var(--teal); text-decoration: none; }
     </div>
     <div class="stat-card">
       <div class="sc-label">Sudah Terisi</div>
-      <div class="sc-value green" id="s-terisi">—</div>
+      <div class="sc-value hijau" id="s-terisi">—</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Belum Terisi</div>
-      <div class="sc-value amber" id="s-belum">—</div>
+      <div class="sc-value emas" id="s-belum">—</div>
     </div>
     <div class="stat-card">
-      <div class="sc-label">Disabled</div>
-      <div class="sc-value red" id="s-disabled">—</div>
+      <div class="sc-label">Tidak Aktif</div>
+      <div class="sc-value merah" id="s-disabled">—</div>
     </div>
   </div>
 
   <div class="progress-section">
     <div class="ps-header">
-      <div class="ps-title">Progress Keterisian Keseluruhan</div>
+      <div class="ps-title">📊 Progress Keterisian Keseluruhan</div>
       <div class="ps-pct" id="overall-pct">—%</div>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
     </div>
     <div class="progress-legend">
-      <div class="pl-item"><div class="pl-dot" style="background:var(--teal)"></div>Terisi</div>
-      <div class="pl-item"><div class="pl-dot" style="background:var(--amber)"></div>Belum terisi</div>
-      <div class="pl-item"><div class="pl-dot" style="background:rgba(255,255,255,0.15)"></div>Disabled</div>
+      <div class="pl-item"><div class="pl-dot" style="background:#5ECC6E"></div>Sudah terisi</div>
+      <div class="pl-item"><div class="pl-dot" style="background:var(--emas-terang)"></div>Belum terisi</div>
+      <div class="pl-item"><div class="pl-dot" style="background:rgba(255,255,255,0.15)"></div>Tidak aktif (disabled)</div>
     </div>
   </div>
 
   <div class="controls">
     <div class="search-wrap">
       <span class="search-icon">⌕</span>
-      <input type="text" id="search" placeholder="Cari nama urusan..." oninput="renderTable()">
+      <input type="text" id="search" placeholder="Cari nama urusan atau kode..." oninput="renderTable()">
     </div>
-    <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">Semua</button>
-    <button class="filter-btn" data-filter="full" onclick="setFilter(this,'full')">100%</button>
-    <button class="filter-btn" data-filter="high" onclick="setFilter(this,'high')">≥50%</button>
-    <button class="filter-btn" data-filter="low" onclick="setFilter(this,'low')">&lt;50%</button>
-    <button class="filter-btn" data-filter="zero" onclick="setFilter(this,'zero')">0%</button>
+    <button class="filter-btn active" onclick="setFilter(this,'all')">Semua</button>
+    <button class="filter-btn" onclick="setFilter(this,'full')">100%</button>
+    <button class="filter-btn" onclick="setFilter(this,'high')">≥50%</button>
+    <button class="filter-btn" onclick="setFilter(this,'low')">&lt;50%</button>
+    <button class="filter-btn" onclick="setFilter(this,'zero')">0%</button>
     <select class="sort-select" id="sort-sel" onchange="renderTable()">
       <option value="kode">Urut: Kode</option>
       <option value="pct-desc">Urut: % Terisi ↓</option>
@@ -389,7 +416,7 @@ footer a { color: var(--teal); text-decoration: none; }
   </div>
 
   <div class="table-wrap">
-    <table id="main-table">
+    <table>
       <thead>
         <tr>
           <th>Kode</th>
@@ -401,23 +428,30 @@ footer a { color: var(--teal); text-decoration: none; }
           <th>Ver. Walidata</th>
           <th>Ver. Pembina</th>
           <th>Final</th>
-          <th style="min-width:120px">% Keterisian</th>
+          <th style="min-width:130px">% Keterisian</th>
         </tr>
       </thead>
-      <tbody id="tbody"></tbody>
+      <tbody id="tbody">
+        <tr><td colspan="10"><div class="empty-state">Memuat data...</div></td></tr>
+      </tbody>
     </table>
   </div>
 </main>
 
 <footer>
-  Data bersumber dari <a href="https://sipd.go.id/ewalidata/" target="_blank">e-Walidata SIPD</a> · KAB. BERAU (6403) · Tahun 2025
-  <br>Dashboard ini diperbarui secara berkala melalui GitHub Actions.
-  <br><span id="footer-updated"></span>
+  <strong style="color:var(--emas-terang)">Pemerintah Kabupaten Berau</strong>
+  <span class="footer-divider">·</span>
+  Data bersumber dari <a href="https://sipd.go.id/ewalidata/" target="_blank">e-Walidata SIPD</a>
+  <span class="footer-divider">·</span>
+  Diperbarui otomatis via GitHub Actions
+  <br><span id="footer-updated" style="margin-top:4px;display:inline-block;"></span>
 </footer>
 
 <script>
 let allData = [];
 let currentFilter = 'all';
+
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07'];
 
 function pct(terisi, digunakan) {
   const d = parseInt(digunakan) || 0;
@@ -427,20 +461,26 @@ function pct(terisi, digunakan) {
 
 function tagClass(p) {
   if (p === 100) return 'tag-full';
-  if (p >= 50)  return 'tag-high';
-  if (p > 0)    return 'tag-mid';
+  if (p >= 50)   return 'tag-high';
+  if (p > 0)     return 'tag-mid';
   return 'tag-zero';
 }
 
 function barClass(p) {
-  if (p >= 70) return '';
-  if (p >= 30) return 'mid';
+  if (p === 100) return 'full';
+  if (p >= 50)   return 'high';
+  if (p > 0)     return 'mid';
   return 'low';
 }
 
-function fmt(n) {
-  return parseInt(n).toLocaleString('id-ID');
+function tagLabel(p) {
+  if (p === 100) return 'PENUH';
+  if (p >= 50)   return 'BAIK';
+  if (p > 0)     return 'PROSES';
+  return 'KOSONG';
 }
+
+function fmt(n) { return parseInt(n).toLocaleString('id-ID'); }
 
 function setFilter(btn, f) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -462,9 +502,9 @@ function renderTable() {
   const q = document.getElementById('search').value.toLowerCase();
   const sort = document.getElementById('sort-sel').value;
 
-  let rows = allData.filter(r =>
-    r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q)
-  ).filter(matchFilter);
+  let rows = allData
+    .filter(r => r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q))
+    .filter(matchFilter);
 
   if (sort === 'pct-desc') rows.sort((a,b) => pct(b.ssd_terisi,b.ssd_digunakan) - pct(a.ssd_terisi,a.ssd_digunakan));
   else if (sort === 'pct-asc') rows.sort((a,b) => pct(a.ssd_terisi,a.ssd_digunakan) - pct(b.ssd_terisi,b.ssd_digunakan));
@@ -473,57 +513,53 @@ function renderTable() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok dengan filter.</div></td></tr>';
     return;
   }
 
   tbody.innerHTML = rows.map(r => {
     const p = pct(r.ssd_terisi, r.ssd_digunakan);
     const bc = barClass(p);
-    const labelShort = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ', '').replace('URUSAN PEMERINTAHAN ', '');
+    const short = r.namaurusan
+      .replace('URUSAN PEMERINTAHAN BIDANG ', '')
+      .replace('URUSAN PEMERINTAHAN ', '');
     return `<tr>
       <td class="td-kode">${r.kodeurusan}</td>
-      <td class="td-nama">${labelShort}<span>${r.namaurusan}</span></td>
+      <td class="td-nama">${short}<span>${r.namaurusan}</span></td>
       <td class="td-num total">${fmt(r.ssd_jml)}</td>
       <td class="td-num">${fmt(r.ssd_digunakan)}</td>
-      <td class="td-num" style="color:var(--teal)">${fmt(r.ssd_terisi)}</td>
-      <td class="td-num" style="color:var(--amber)">${fmt(r.ssd_tidakterisi)}</td>
+      <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
+      <td class="td-num" style="color:var(--emas-terang)">${fmt(r.ssd_tidakterisi)}</td>
       <td class="td-num">${fmt(r.ssd_ver_walidata)}</td>
       <td class="td-num">${fmt(r.ssd_ver_pembina)}</td>
       <td class="td-num">${fmt(r.ssd_final)}</td>
       <td class="td-bar-cell">
         <div class="mini-bar-wrap"><div class="mini-bar ${bc}" style="width:${p}%"></div></div>
-        <span class="mini-pct">${p}%</span>
-        <span class="tag ${tagClass(p)}">${p === 100 ? 'PENUH' : p >= 50 ? 'BAIK' : p > 0 ? 'PROSES' : 'KOSONG'}</span>
+        <span class="mini-pct">${p}%</span><span class="tag ${tagClass(p)}">${tagLabel(p)}</span>
       </td>
     </tr>`;
   }).join('');
 }
 
 function renderStats() {
-  const tot_urusan = allData.length;
+  const tot_urusan   = allData.length;
   const tot_induk    = allData.reduce((s,r) => s + parseInt(r.ssd_jml), 0);
   const tot_digunakan= allData.reduce((s,r) => s + parseInt(r.ssd_digunakan), 0);
   const tot_terisi   = allData.reduce((s,r) => s + parseInt(r.ssd_terisi), 0);
   const tot_belum    = allData.reduce((s,r) => s + parseInt(r.ssd_tidakterisi), 0);
   const tot_disabled = allData.reduce((s,r) => s + parseInt(r.ssd_disabled), 0);
 
-  document.getElementById('s-urusan').textContent = tot_urusan;
-  document.getElementById('s-induk').textContent = fmt(tot_induk);
-  document.getElementById('s-digunakan').textContent = fmt(tot_digunakan);
-  document.getElementById('s-terisi').textContent = fmt(tot_terisi);
-  document.getElementById('s-belum').textContent = fmt(tot_belum);
+  document.getElementById('s-urusan').textContent   = tot_urusan;
+  document.getElementById('s-induk').textContent    = fmt(tot_induk);
+  document.getElementById('s-digunakan').textContent= fmt(tot_digunakan);
+  document.getElementById('s-terisi').textContent   = fmt(tot_terisi);
+  document.getElementById('s-belum').textContent    = fmt(tot_belum);
   document.getElementById('s-disabled').textContent = fmt(tot_disabled);
 
   const p = tot_digunakan > 0 ? Math.round((tot_terisi / tot_digunakan) * 100) : 0;
   document.getElementById('overall-pct').textContent = p + '%';
-  setTimeout(() => {
-    document.getElementById('overall-bar').style.width = p + '%';
-  }, 200);
+  setTimeout(() => { document.getElementById('overall-bar').style.width = p + '%'; }, 300);
 }
-
-// Kode urusan yang tidak ditangani Pemkab Berau — disembunyikan dari tampilan
-const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07'];
 
 async function loadData() {
   try {
@@ -532,20 +568,27 @@ async function loadData() {
     allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
 
     const meta = json.meta || {};
+    const thn = meta.tahun || '2025';
     const updated = meta.last_updated
-      ? new Date(meta.last_updated).toLocaleString('id-ID', {timeZone:'Asia/Makassar', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'})
+      ? new Date(meta.last_updated).toLocaleString('id-ID', {
+          timeZone:'Asia/Makassar',
+          day:'2-digit', month:'long', year:'numeric',
+          hour:'2-digit', minute:'2-digit'
+        })
       : '—';
 
-    document.getElementById('live-label').textContent = 'data tersedia';
-    document.getElementById('last-updated').textContent = 'Diperbarui: ' + updated;
+    document.getElementById('live-label').textContent  = 'data tersedia';
+    document.getElementById('tahun-badge').textContent = thn;
+    document.getElementById('tahun-hero').textContent  = thn;
+    document.getElementById('last-updated').textContent= 'Per: ' + updated + ' WITA';
     document.getElementById('footer-updated').textContent = 'Data per: ' + updated + ' WITA';
-    document.getElementById('tahun-badge').textContent = meta.tahun || '2025';
 
     renderStats();
     renderTable();
   } catch(e) {
     document.getElementById('live-label').textContent = 'gagal memuat';
-    document.getElementById('tbody').innerHTML = '<tr><td colspan="10"><div class="empty-state">Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
   }
 }
 
