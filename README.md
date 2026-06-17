@@ -6,7 +6,7 @@ Website publik untuk memantau progress keterisian **Data Statistik Sektoral Daer
 
 ---
 
-## 📋 Apa itu dashboard ini?
+## 📋 Untuk Apa dashboard ini?
 
 Dashboard ini menampilkan seberapa jauh OPD-OPD di suatu daerah telah mengisi data statistik sektoral mereka di sistem e-Walidata SIPD. Data yang ditampilkan mencakup:
 
