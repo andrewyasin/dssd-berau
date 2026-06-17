@@ -1,4 +1,3 @@
-cat > /home/claude/dssd-berau/README.md << 'ENDMD'
 # 📊 Dashboard Rekap Tahapan DSSD
 
 Website publik untuk memantau progress keterisian **Data Statistik Sektoral Daerah (DSSD)** di e-Walidata SIPD — tanpa perlu login, bisa diakses siapa saja.
@@ -159,5 +158,3 @@ dssd-berau/
 Bebas digunakan dan dimodifikasi untuk keperluan pemerintahan daerah di Indonesia.
 
 Dibuat oleh **Diskominfo Kabupaten Berau** · Kalimantan Timur
-ENDMD
-echo "OK: $(wc -l < /home/claude/dssd-berau/README.md) baris"
