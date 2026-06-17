@@ -1,11 +1,12 @@
 name: Update Data DSSD
 
 on:
-  schedule:
-    - cron: '0 23 * * *'
-    - cron: '0 0 * * *'
-    - cron: '0 6 * * *'
   workflow_dispatch:
+    inputs:
+      json_data:
+        description: 'Paste isi JSON dari DevTools SIPD (response ajax_list_pemda_keterisian)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -17,159 +18,30 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: pip install requests beautifulsoup4 --quiet
-
-      - name: Login dan Fetch data SIPD
-        env:
-          SIPD_USERNAME: ${{ secrets.SIPD_USERNAME }}
-          SIPD_PASSWORD: ${{ secrets.SIPD_PASSWORD }}
+      - name: Simpan data baru
         run: |
           python3 << 'PYEOF'
-          import requests, json, sys, re, os, hashlib
+          import json, sys
           from datetime import datetime
-          from bs4 import BeautifulSoup
 
-          USERNAME  = os.environ["SIPD_USERNAME"]
-          PASSWORD  = os.environ["SIPD_PASSWORD"]
-          SUBDOMAIN = "beraukab.sipd.kemendagri.go.id"
-          KODEPEMDA = "6403"
-          TAHUN     = "2025"
-          EXCLUDE   = {"3.28","3.29","5.06","5.07"}
-          BASE      = "https://sipd.go.id"
+          raw = '''${{ github.event.inputs.json_data }}'''
 
-          # Hash MD5 — SIPD mengirim user dan pass sebagai MD5
-          user_md5 = hashlib.md5(USERNAME.encode()).hexdigest()
-          pass_md5 = hashlib.md5(PASSWORD.encode()).hexdigest()
-          print(f"user MD5: {user_md5}")
-          print(f"pass MD5: {pass_md5[:6]}...")
-
-          s = requests.Session()
-          s.headers.update({
-              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-              "Accept-Language": "id-ID,id;q=0.9",
-          })
-
-          # Step 1: GET halaman login untuk ambil _token
-          print("=== Step 1: Ambil halaman login ===")
-          r0 = s.get(f"{BASE}/ewalidata/a/", timeout=30)
-          print(f"Status: {r0.status_code}")
-
-          soup = BeautifulSoup(r0.text, "html.parser")
-          form = soup.find("form", id="loginform") or soup.find("form")
-          if not form:
-              print("Form tidak ditemukan!")
-              sys.exit(1)
-
-          action = form.get("action", "")
-          if action.startswith("/"):
-              action = BASE + action
-          elif not action.startswith("http"):
-              action = f"{BASE}/ewalidata/a/"
-
-          csrf = (form.find("input", {"name": "_token"}) or {}).get("value", "")
-          print(f"Action: {action}")
-          print(f"CSRF: {csrf[:20]}...")
-
-          # Tahun dari select
-          tahun_val = TAHUN
-          sel = form.find("select", {"name": "tahun"})
-          if sel:
-              for o in sel.find_all("option"):
-                  if o.get("value","") == TAHUN:
-                      tahun_val = TAHUN
-                      break
-
-          print(f"Tahun: {tahun_val}")
-
-          # Step 2: POST login dengan MD5
-          print("=== Step 2: Login dengan MD5 hash ===")
-          s.headers.update({
-              "Content-Type": "application/x-www-form-urlencoded",
-              "Referer": f"{BASE}/ewalidata/a/",
-              "Origin":  BASE,
-          })
-
-          payload = {
-              "subdomain": SUBDOMAIN,
-              "user":      user_md5,
-              "pass":      pass_md5,
-              "tahun":     tahun_val,
-              "_token":    csrf,
-              "submit":    "1",
-          }
-          print(f"Payload keys: {list(payload.keys())}")
-
-          r1 = s.post(action, data=payload, timeout=30, allow_redirects=True)
-          print(f"Status: {r1.status_code}, URL: {r1.url}")
-          print(f"Cookies: {dict(s.cookies)}")
-
-          # Cek title
-          title_m = re.search(r"<title>(.*?)</title>", r1.text, re.IGNORECASE)
-          title = title_m.group(1) if title_m else "?"
-          print(f"Title: {title}")
-
-          # Cari session token
-          session_token = None
-          for resp in list(r1.history) + [r1]:
-              m = re.search(r"/ewalidata/([a-f0-9]{40})/", resp.url)
-              if m:
-                  session_token = m.group(1)
-                  print(f"Session token: {session_token}")
-                  break
-
-          if not session_token:
-              m2 = re.search(r"/ewalidata/([a-f0-9]{40})/", r1.text)
-              if m2:
-                  session_token = m2.group(1)
-                  print(f"Session token (dari HTML): {session_token}")
-
-          if not session_token:
-              print("GAGAL: session token tidak ditemukan")
-              sys.exit(1)
-
-          # Step 3: Validasi session via dashboard
-          print("=== Step 3: Validasi dashboard ===")
-          s.headers.update({"Accept": "text/html,*/*;q=0.9"})
-          s.headers.pop("Content-Type", None)
-          rd = s.get(f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard", timeout=30)
-          td = re.search(r"<title>(.*?)</title>", rd.text, re.IGNORECASE)
-          td_title = td.group(1) if td else "?"
-          print(f"Dashboard title: {td_title}")
-
-          if "Login" in td_title or "login" in td_title:
-              print("Session tidak valid, login ditolak server.")
-              sys.exit(1)
-
-          # Step 4: Fetch rekap DSSD
-          print("=== Step 4: Fetch rekap DSSD ===")
-          s.headers.update({
-              "Accept": "application/json, text/javascript, */*; q=0.01",
-              "X-Requested-With": "XMLHttpRequest",
-              "Referer": f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=keterisian&kodepemda={KODEPEMDA}",
-          })
-
-          ts = int(datetime.now().timestamp() * 1000)
-          url = f"{BASE}/ewalidata/{session_token}/?m=daerah_dashboard&f=ajax_list_pemda_keterisian&kodepemda={KODEPEMDA}&_={ts}"
-          r2 = s.get(url, timeout=30)
-          print(f"Status: {r2.status_code}")
-          print(f"Response: {r2.text[:200]}")
+          EXCLUDE = {"3.28","3.29","5.06","5.07","9.01","9.02","9.03","7.02","7.03"}
 
           try:
-              data = r2.json()
+              data = json.loads(raw)
           except Exception as e:
-              print(f"Bukan JSON: {e}")
+              print(f"JSON tidak valid: {e}")
               sys.exit(1)
 
-          if "data" not in data or not data["data"]:
-              print(f"Data kosong: {str(data)[:200]}")
+          rows = data if isinstance(data, list) else data.get("data", [])
+          if not rows:
+              print("Data kosong!")
               sys.exit(1)
 
-          # Step 5: Simpan
           filtered = [
-              {k:v for k,v in row.items() if k != "skpd"}
-              for row in data["data"]
+              {k: v for k, v in row.items() if k != "skpd"}
+              for row in rows
               if row.get("kodeurusan") not in EXCLUDE
           ]
 
@@ -178,15 +50,15 @@ jobs:
               "meta": {
                   "last_updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+08:00"),
                   "source": "e-Walidata SIPD",
-                  "tahun": TAHUN,
-                  "kodepemda": KODEPEMDA,
+                  "tahun": "2025",
+                  "kodepemda": "6403"
               }
           }
 
           with open("data/rekap.json", "w", encoding="utf-8") as f:
               json.dump(output, f, ensure_ascii=False, separators=(",",":"))
 
-          print(f"=== BERHASIL: {len(filtered)} urusan tersimpan ===")
+          print(f"Berhasil: {len(filtered)} urusan disimpan.")
           PYEOF
 
       - name: Commit dan push
