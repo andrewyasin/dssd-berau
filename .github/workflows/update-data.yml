@@ -22,9 +22,9 @@ jobs:
         run: |
           python3 << 'PYEOF'
           import json, sys
-          from datetime import datetime
+          from datetime import datetime, timezone, timedelta
 
-          raw = '''${{ github.event.inputs.json_data }}'''
+          raw = r"""${{ github.event.inputs.json_data }}"""
 
           EXCLUDE = {"3.28","3.29","5.06","5.07","9.01","9.02","9.03","7.02","7.03"}
 
@@ -45,10 +45,16 @@ jobs:
               if row.get("kodeurusan") not in EXCLUDE
           ]
 
+          # Timestamp WITA (UTC+8)
+          wita = timezone(timedelta(hours=8))
+          now_wita = datetime.now(wita)
+          timestamp = now_wita.strftime("%Y-%m-%dT%H:%M:%S+08:00")
+          print(f"Timestamp WITA: {timestamp}")
+
           output = {
               "data": filtered,
               "meta": {
-                  "last_updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+                  "last_updated": timestamp,
                   "source": "e-Walidata SIPD",
                   "tahun": "2025",
                   "kodepemda": "6403"
@@ -59,6 +65,7 @@ jobs:
               json.dump(output, f, ensure_ascii=False, separators=(",",":"))
 
           print(f"Berhasil: {len(filtered)} urusan disimpan.")
+          print(f"Diperbarui: {now_wita.strftime('%d %B %Y %H:%M')} WITA")
           PYEOF
 
       - name: Commit dan push
@@ -66,5 +73,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/rekap.json
-          git diff --staged --quiet || git commit -m "chore: update data DSSD $(date +'%Y-%m-%d %H:%M') UTC"
+          git diff --staged --quiet || git commit -m "chore: update data DSSD $(TZ='Asia/Makassar' date +'%Y-%m-%d %H:%M') WITA"
           git push
