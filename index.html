@@ -584,19 +584,28 @@ async function loadData() {
 
     const meta = json.meta || {};
     const thn = meta.tahun || '2025';
-    const updated = meta.last_updated
-      ? new Date(meta.last_updated).toLocaleString('id-ID', {
-          timeZone:'Asia/Makassar',
-          day:'2-digit', month:'long', year:'numeric',
-          hour:'2-digit', minute:'2-digit'
-        })
-      : '—';
+
+    // Format tanggal dari meta.last_updated
+    let updated = '—';
+    if (meta.last_updated && meta.last_updated !== '—') {
+      try {
+        // Tambahkan offset +08:00 jika belum ada
+        const raw = meta.last_updated.includes('+') || meta.last_updated.endsWith('Z')
+          ? meta.last_updated
+          : meta.last_updated + '+08:00';
+        updated = new Date(raw).toLocaleString('id-ID', {
+          timeZone: 'Asia/Makassar',
+          day: '2-digit', month: 'long', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch(e) { updated = meta.last_updated; }
+    }
 
     document.getElementById('live-label').textContent  = 'data tersedia';
     document.getElementById('tahun-badge').textContent = thn;
     document.getElementById('tahun-hero').textContent  = thn;
-    document.getElementById('last-updated').textContent= 'Per: ' + updated + ' WITA';
-    document.getElementById('footer-updated').textContent = 'Data per: ' + updated + ' WITA';
+    document.getElementById('last-updated').textContent= updated !== '—' ? 'Per: ' + updated + ' WITA' : '';
+    document.getElementById('footer-updated').textContent = updated !== '—' ? 'Data per: ' + updated + ' WITA' : '';
 
     renderStats();
     renderTable();
