@@ -333,7 +333,24 @@ footer a:hover { text-decoration: underline; }
 
 <header class="site-header">
   <div class="logo">
-    <div class="logo-emblem">🛡️</div>
+    <div class="logo-emblem">
+      <svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="32" cy="34" rx="16" ry="11" fill="#0D3618" stroke="#F0C040" stroke-width="1.5"/>
+        <ellipse cx="32" cy="33" rx="11" ry="8" fill="#1A6B2F" stroke="#F0C040" stroke-width="1"/>
+        <line x1="32" y1="25" x2="32" y2="41" stroke="#F0C040" stroke-width="0.8" opacity="0.7"/>
+        <line x1="21" y1="33" x2="43" y2="33" stroke="#F0C040" stroke-width="0.8" opacity="0.7"/>
+        <line x1="24" y1="26" x2="40" y2="40" stroke="#F0C040" stroke-width="0.8" opacity="0.7"/>
+        <line x1="40" y1="26" x2="24" y2="40" stroke="#F0C040" stroke-width="0.8" opacity="0.7"/>
+        <ellipse cx="32" cy="20" rx="5" ry="4" fill="#0D3618" stroke="#F0C040" stroke-width="1.2"/>
+        <circle cx="30" cy="19" r="1" fill="#F0C040"/>
+        <circle cx="34" cy="19" r="1" fill="#F0C040"/>
+        <ellipse cx="13" cy="27" rx="4.5" ry="2.5" fill="#0D3618" stroke="#F0C040" stroke-width="1" transform="rotate(-30 13 27)"/>
+        <ellipse cx="51" cy="27" rx="4.5" ry="2.5" fill="#0D3618" stroke="#F0C040" stroke-width="1" transform="rotate(30 51 27)"/>
+        <ellipse cx="15" cy="43" rx="4.5" ry="2.5" fill="#0D3618" stroke="#F0C040" stroke-width="1" transform="rotate(25 15 43)"/>
+        <ellipse cx="49" cy="43" rx="4.5" ry="2.5" fill="#0D3618" stroke="#F0C040" stroke-width="1" transform="rotate(-25 49 43)"/>
+        <ellipse cx="32" cy="47" rx="2.5" ry="3.5" fill="#0D3618" stroke="#F0C040" stroke-width="1"/>
+      </svg>
+    </div>
     <div class="logo-info">
       <div class="logo-text">PEMERINTAH KAB. BERAU</div>
       <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
@@ -442,8 +459,6 @@ footer a:hover { text-decoration: underline; }
   <strong style="color:var(--emas-terang)">Pemerintah Kabupaten Berau</strong>
   <span class="footer-divider">·</span>
   Data bersumber dari <a href="https://sipd.go.id/ewalidata/" target="_blank">e-Walidata SIPD</a>
-  <span class="footer-divider">·</span>
-  Diperbarui otomatis via GitHub Actions
   <br><span id="footer-updated" style="margin-top:4px;display:inline-block;"></span>
 </footer>
 
@@ -451,7 +466,7 @@ footer a:hover { text-decoration: underline; }
 let allData = [];
 let currentFilter = 'all';
 
-const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07'];
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
 
 function pct(terisi, digunakan) {
   const d = parseInt(digunakan) || 0;
