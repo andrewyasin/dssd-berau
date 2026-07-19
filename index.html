@@ -3,23 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rekap Tahapan DSSD — KAB. BERAU 2025</title>
+<title>Rekap Tahapan DSSD — KAB. BERAU</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* Palet Pemkab Berau */
   --hijau:        #1A6B2F;
   --hijau-tua:    #134D22;
   --hijau-gelap:  #0D3618;
   --hijau-muda:   #218A3C;
-  --hijau-terang: rgba(26,107,47,0.15);
   --hijau-rim:    rgba(26,107,47,0.35);
   --emas:         #D4A017;
   --emas-terang:  #F0C040;
   --emas-muda:    rgba(212,160,23,0.15);
   --emas-rim:     rgba(212,160,23,0.4);
-  --merah:        #C0392B;
   --merah-muda:   rgba(192,57,43,0.15);
   --putih:        #F7F9F4;
   --putih2:       #D6E4D9;
@@ -30,307 +27,130 @@
   --font:         'Plus Jakarta Sans', sans-serif;
   --mono:         'DM Mono', monospace;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font);
-  background: var(--hijau-gelap);
-  color: var(--putih);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.6;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);min-height:100vh;font-size:14px;line-height:1.6}
 
-/* ===== HEADER ===== */
-.site-header {
-  background: var(--hijau-tua);
-  border-bottom: 2px solid var(--emas);
-  padding: 0 2rem;
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 68px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
-}
-.logo { display: flex; align-items: center; gap: 14px; }
-.logo-info {}
-.logo-text {
-  font-size: 14px; font-weight: 700;
-  color: var(--emas-terang);
-  letter-spacing: .01em;
-}
-.logo-sub { font-size: 11px; color: var(--putih2); font-weight: 400; }
-.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.live-dot {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--emas-terang); font-family: var(--mono);
-}
-.live-dot::before {
-  content: '';
-  width: 7px; height: 7px;
-  background: var(--emas-terang);
-  border-radius: 50%;
-  animation: blink 2s infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
-.year-badge {
-  background: var(--emas-muda);
-  color: var(--emas-terang);
-  font-size: 12px; font-weight: 700;
-  padding: 4px 12px; border-radius: 999px;
-  border: 1px solid var(--border-emas);
-  font-family: var(--mono);
-  letter-spacing: .05em;
-}
-.last-updated { font-size: 11px; color: var(--abu); font-family: var(--mono); }
+/* HEADER */
+.site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
+.logo-text{font-size:14px;font-weight:700;color:var(--emas-terang);letter-spacing:.01em}
+.logo-sub{font-size:11px;color:var(--putih2);font-weight:400}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-dot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--emas-terang);font-family:var(--mono)}
+.live-dot::before{content:'';width:7px;height:7px;background:var(--emas-terang);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.last-updated{font-size:11px;color:var(--abu);font-family:var(--mono)}
 
-/* ===== BANNER JUDUL ===== */
-.hero-banner {
-  background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau) 60%, var(--hijau-muda) 100%);
-  border-bottom: 3px solid var(--emas);
-  padding: 2rem 2rem 1.75rem;
-  position: relative;
-  overflow: hidden;
-}
-.hero-banner::before {
-  content: '🐢';
-  position: absolute; right: 2rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: 80px; opacity: .07;
-  user-select: none;
-}
-.hero-inner { max-width: 1280px; margin: 0 auto; }
-.hero-eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: .12em;
-  color: var(--emas-terang); text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.hero-title {
-  font-size: 24px; font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-.hero-sub { font-size: 13px; color: var(--putih2); }
+/* BANNER */
+.hero-banner{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 60%,var(--hijau-muda) 100%);border-bottom:3px solid var(--emas);padding:1.5rem 2rem;position:relative;overflow:hidden}
+.hero-banner::before{content:'🐢';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-size:80px;opacity:.07;user-select:none}
+.hero-inner{max-width:1280px;margin:0 auto}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--emas-terang);text-transform:uppercase;margin-bottom:4px}
+.hero-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.hero-sub{font-size:13px;color:var(--putih2)}
 
-/* ===== MAIN ===== */
-main { max-width: 1280px; margin: 0 auto; padding: 1.75rem 2rem; }
+/* TAHUN SWITCHER */
+.tahun-bar{background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px}
+.tahun-label{font-size:12px;color:var(--abu);font-weight:500;margin-right:4px}
+.tahun-btn{font-size:13px;font-weight:600;font-family:var(--mono);padding:5px 16px;border-radius:999px;border:1.5px solid var(--border-emas);background:transparent;color:var(--abu);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.tahun-btn:hover{border-color:var(--emas-terang);color:var(--emas-terang)}
+.tahun-btn.active{background:var(--emas);border-color:var(--emas);color:var(--hijau-gelap)}
 
-/* ===== STAT CARDS ===== */
-.stat-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 12px;
-  margin-bottom: 1.5rem;
-}
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  transition: border-color .2s, transform .15s;
-  position: relative;
-  overflow: hidden;
-}
-.stat-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--hijau-muda);
-  opacity: 0;
-  transition: opacity .2s;
-}
-.stat-card:hover { border-color: var(--hijau-rim); transform: translateY(-1px); }
-.stat-card:hover::before { opacity: 1; }
-.stat-card.accent {
-  border-color: var(--border-emas);
-  background: var(--emas-muda);
-}
-.stat-card.accent::before { background: var(--emas); opacity: 1; }
-.sc-label {
-  font-size: 10px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .07em; color: var(--abu); margin-bottom: 8px;
-}
-.sc-value {
-  font-size: 28px; font-weight: 700;
-  font-family: var(--mono); color: var(--putih);
-}
-.sc-value.hijau { color: #5ECC6E; }
-.sc-value.emas  { color: var(--emas-terang); }
-.sc-value.merah { color: #FF6B6B; }
+/* MAIN */
+main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
 
-/* ===== PROGRESS ===== */
-.progress-section {
-  background: var(--card);
-  border: 1px solid var(--border-emas);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-.ps-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: .75rem;
-}
-.ps-title { font-size: 13px; font-weight: 600; color: var(--putih2); }
-.ps-pct {
-  font-size: 24px; font-weight: 700;
-  font-family: var(--mono); color: var(--emas-terang);
-}
-.progress-bar-wrap {
-  height: 12px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 999px; overflow: hidden;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
-.progress-bar-fill {
-  height: 100%; border-radius: 999px;
-  background: linear-gradient(90deg, var(--hijau-muda), var(--emas-terang));
-  transition: width 1.2s cubic-bezier(.4,0,.2,1);
-  position: relative;
-}
-.progress-bar-fill::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
-  border-radius: 999px;
-}
-.progress-legend { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-.pl-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--abu); }
-.pl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+/* STAT CARDS */
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hijau-muda);opacity:0;transition:opacity .2s}
+.stat-card:hover{border-color:var(--hijau-rim);transform:translateY(-1px)}
+.stat-card:hover::before{opacity:1}
+.stat-card.accent{border-color:var(--border-emas);background:var(--emas-muda)}
+.stat-card.accent::before{background:var(--emas);opacity:1}
+.sc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--abu);margin-bottom:8px}
+.sc-value{font-size:26px;font-weight:700;font-family:var(--mono);color:var(--putih)}
+.sc-value.hijau{color:#5ECC6E}
+.sc-value.emas{color:var(--emas-terang)}
+.sc-value.merah{color:#FF6B6B}
 
-/* ===== CONTROLS ===== */
-.controls {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  align-items: center; margin-bottom: 1rem;
-}
-.search-wrap { position: relative; flex: 1; min-width: 200px; }
-.search-wrap input {
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px 8px 36px;
-  color: var(--putih);
-  font-family: var(--font); font-size: 13px;
-  outline: none;
-  transition: border-color .2s;
-}
-.search-wrap input:focus { border-color: var(--emas); }
-.search-wrap input::placeholder { color: var(--abu); }
-.search-icon {
-  position: absolute; left: 11px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--abu); font-size: 15px; pointer-events: none;
-}
-.filter-btn {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 13px;
-  color: var(--abu); font-family: var(--font); font-size: 12px;
-  cursor: pointer; transition: all .15s; white-space: nowrap;
-  font-weight: 500;
-}
-.filter-btn:hover { border-color: var(--emas); color: var(--emas-terang); }
-.filter-btn.active {
-  border-color: var(--emas);
-  color: var(--hijau-gelap);
-  background: var(--emas);
-  font-weight: 600;
-}
-.sort-select {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: 7px 12px;
-  color: var(--abu); font-family: var(--font); font-size: 12px;
-  outline: none; cursor: pointer; appearance: none;
-}
-.sort-select:focus { border-color: var(--emas); }
+/* PROGRESS */
+.progress-section{background:var(--card);border:1px solid var(--border-emas);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.ps-title{font-size:13px;font-weight:600;color:var(--putih2)}
+.ps-pct{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--emas-terang)}
+.progress-bar-wrap{height:12px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05)}
+.progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hijau-muda),var(--emas-terang));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative}
+.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.15) 50%,transparent 100%);border-radius:999px}
+.progress-legend{display:flex;gap:1.5rem;flex-wrap:wrap}
+.pl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--abu)}
+.pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* ===== TABLE ===== */
-.table-wrap {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden; overflow-x: auto;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-}
-table { width: 100%; border-collapse: collapse; min-width: 780px; }
-thead th {
-  background: var(--hijau-tua);
-  padding: 10px 14px;
-  text-align: left;
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .07em;
-  color: var(--emas-terang);
-  border-bottom: 2px solid var(--emas);
-  white-space: nowrap;
-}
-tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: rgba(26,107,47,0.2); }
-td { padding: 10px 14px; font-size: 13px; color: var(--putih2); vertical-align: middle; }
-.td-kode { font-family: var(--mono); font-size: 11px; color: var(--emas); font-weight: 500; }
-.td-nama { font-weight: 600; color: var(--putih); max-width: 280px; }
-.td-nama span { font-size: 10px; font-weight: 400; color: var(--abu); display: block; margin-top: 1px; }
-.td-num { font-family: var(--mono); font-size: 12px; text-align: right; }
-.td-num.total { color: var(--putih2); }
-.td-bar-cell { width: 130px; }
-.mini-bar-wrap {
-  height: 6px; background: rgba(255,255,255,0.07);
-  border-radius: 99px; overflow: hidden; margin-bottom: 4px;
-}
-.mini-bar { height: 100%; border-radius: 99px; transition: width .6s ease; }
-.mini-bar.full  { background: linear-gradient(90deg, #218A3C, #5ECC6E); }
-.mini-bar.high  { background: linear-gradient(90deg, var(--hijau-muda), #8FD98F); }
-.mini-bar.mid   { background: linear-gradient(90deg, var(--emas), var(--emas-terang)); }
-.mini-bar.low   { background: linear-gradient(90deg, #C0392B, #E74C3C); }
-.mini-pct { font-size: 10px; color: var(--abu); font-family: var(--mono); }
-.tag {
-  display: inline-block; font-size: 10px; font-weight: 700;
-  padding: 1px 7px; border-radius: 4px; font-family: var(--mono);
-  margin-left: 4px; letter-spacing: .03em;
-}
-.tag-full { background: rgba(94,204,110,.18); color: #5ECC6E; border: 1px solid rgba(94,204,110,.3); }
-.tag-high { background: rgba(26,107,47,.25); color: #8FD98F; border: 1px solid rgba(143,217,143,.25); }
-.tag-mid  { background: var(--emas-muda); color: var(--emas-terang); border: 1px solid var(--border-emas); }
-.tag-low  { background: var(--merah-muda); color: #FF6B6B; border: 1px solid rgba(192,57,43,.3); }
-.tag-zero { background: rgba(255,255,255,.05); color: var(--abu); border: 1px solid var(--border); }
+/* CONTROLS */
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:var(--putih);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--emas)}
+.search-wrap input::placeholder{color:var(--abu)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:15px;pointer-events:none}
+.filter-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 13px;color:var(--abu);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
+.filter-btn:hover{border-color:var(--emas);color:var(--emas-terang)}
+.filter-btn.active{border-color:var(--emas);color:var(--hijau-gelap);background:var(--emas);font-weight:600}
+.sort-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--abu);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;appearance:none}
+.sort-select:focus{border-color:var(--emas)}
 
-.empty-state { text-align: center; padding: 4rem; color: var(--abu); font-size: 13px; }
+/* TABLE */
+.table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+table{width:100%;border-collapse:collapse;min-width:780px}
+thead th{background:var(--hijau-tua);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);border-bottom:2px solid var(--emas);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(26,107,47,0.2)}
+td{padding:10px 14px;font-size:13px;color:var(--putih2);vertical-align:middle}
+.td-kode{font-family:var(--mono);font-size:11px;color:var(--emas);font-weight:500}
+.td-nama{font-weight:600;color:var(--putih);max-width:280px}
+.td-nama span{font-size:10px;font-weight:400;color:var(--abu);display:block;margin-top:1px}
+.td-num{font-family:var(--mono);font-size:12px;text-align:right}
+.td-num.total{color:var(--putih2)}
+.td-bar-cell{width:130px}
+.mini-bar-wrap{height:6px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.mini-bar{height:100%;border-radius:99px;transition:width .6s ease}
+.mini-bar.full{background:linear-gradient(90deg,#218A3C,#5ECC6E)}
+.mini-bar.high{background:linear-gradient(90deg,var(--hijau-muda),#8FD98F)}
+.mini-bar.mid{background:linear-gradient(90deg,var(--emas),var(--emas-terang))}
+.mini-bar.low{background:linear-gradient(90deg,#C0392B,#E74C3C)}
+.mini-pct{font-size:10px;color:var(--abu);font-family:var(--mono)}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;font-family:var(--mono);margin-left:4px;letter-spacing:.03em}
+.tag-full{background:rgba(94,204,110,.18);color:#5ECC6E;border:1px solid rgba(94,204,110,.3)}
+.tag-high{background:rgba(26,107,47,.25);color:#8FD98F;border:1px solid rgba(143,217,143,.25)}
+.tag-mid{background:var(--emas-muda);color:var(--emas-terang);border:1px solid var(--border-emas)}
+.tag-low{background:var(--merah-muda);color:#FF6B6B;border:1px solid rgba(192,57,43,.3)}
+.tag-zero{background:rgba(255,255,255,.05);color:var(--abu);border:1px solid var(--border)}
+.empty-state{text-align:center;padding:4rem;color:var(--abu);font-size:13px}
 
-/* ===== FOOTER ===== */
-footer {
-  text-align: center; padding: 1.5rem 2rem;
-  color: var(--abu); font-size: 11px;
-  border-top: 1px solid var(--border);
-  margin-top: 2.5rem;
-  background: var(--hijau-tua);
-}
-footer a { color: var(--emas-terang); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
-.footer-divider { margin: 0 8px; opacity: .4; }
+/* FOOTER */
+footer{text-align:center;padding:1.5rem 2rem;color:var(--abu);font-size:11px;border-top:1px solid var(--border);margin-top:2.5rem;background:var(--hijau-tua)}
+footer a{color:var(--emas-terang);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.footer-divider{margin:0 8px;opacity:.4}
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .site-header { padding: 0 1rem; height: auto; min-height: 60px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
-  .hero-banner { padding: 1.25rem 1rem; }
-  main { padding: 1rem; }
-  .hero-banner::before { display: none; }
-  .last-updated { display: none; }
+@media(max-width:640px){
+  .site-header{padding:0 1rem;height:auto;min-height:60px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
+  .hero-banner{padding:1.25rem 1rem}
+  .tahun-bar{padding:.75rem 1rem}
+  main{padding:1rem}
+  .hero-banner::before{display:none}
+  .last-updated{display:none}
 }
 </style>
 </head>
 <body>
 
 <header class="site-header">
-  <div class="logo">
-    <div class="logo-info">
-      <div class="logo-text">PEMERINTAH KAB. BERAU</div>
-      <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
-    </div>
+  <div>
+    <div class="logo-text">PEMERINTAH KAB. BERAU</div>
+    <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
   </div>
   <div class="header-right">
-    <span class="year-badge" id="tahun-badge">2025</span>
     <span class="live-dot" id="live-label">memuat...</span>
     <span class="last-updated" id="last-updated"></span>
   </div>
@@ -344,8 +164,15 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<div class="tahun-bar">
+  <span class="tahun-label">Tahun Data:</span>
+  <button class="tahun-btn" onclick="switchTahun('2023',this)">2023</button>
+  <button class="tahun-btn" onclick="switchTahun('2024',this)">2024</button>
+  <button class="tahun-btn active" onclick="switchTahun('2025',this)">2025</button>
+</div>
+
 <main>
-  <div class="stat-cards" id="stat-cards">
+  <div class="stat-cards">
     <div class="stat-card accent">
       <div class="sc-label">Total Urusan</div>
       <div class="sc-value emas" id="s-urusan">—</div>
@@ -438,36 +265,52 @@ footer a:hover { text-decoration: underline; }
 <script>
 let allData = [];
 let currentFilter = 'all';
+let currentTahun = '2025';
 
 const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
 
+const FILE_MAP = {
+  '2023': 'data/rekap-2023.json',
+  '2024': 'data/rekap-2024.json',
+  '2025': 'data/rekap.json',
+};
+
+function switchTahun(tahun, btn) {
+  currentTahun = tahun;
+  document.querySelectorAll('.tahun-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tahun-hero').textContent = tahun;
+  // Reset filter & search
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  currentFilter = 'all';
+  document.getElementById('overall-bar').style.width = '0%';
+  loadData(tahun);
+}
+
 function pct(terisi, digunakan) {
   const d = parseInt(digunakan) || 0;
-  if (d === 0) return 0;
-  return Math.round((parseInt(terisi) / d) * 100);
+  return d === 0 ? 0 : Math.round((parseInt(terisi) / d) * 100);
 }
-
 function tagClass(p) {
-  if (p === 100) return 'tag-full';
-  if (p >= 50)   return 'tag-high';
-  if (p > 0)     return 'tag-mid';
+  if (p===100) return 'tag-full';
+  if (p>=50)   return 'tag-high';
+  if (p>0)     return 'tag-mid';
   return 'tag-zero';
 }
-
 function barClass(p) {
-  if (p === 100) return 'full';
-  if (p >= 50)   return 'high';
-  if (p > 0)     return 'mid';
+  if (p===100) return 'full';
+  if (p>=50)   return 'high';
+  if (p>0)     return 'mid';
   return 'low';
 }
-
 function tagLabel(p) {
-  if (p === 100) return 'PENUH';
-  if (p >= 50)   return 'BAIK';
-  if (p > 0)     return 'PROSES';
+  if (p===100) return 'PENUH';
+  if (p>=50)   return 'BAIK';
+  if (p>0)     return 'PROSES';
   return 'KOSONG';
 }
-
 function fmt(n) { return parseInt(n).toLocaleString('id-ID'); }
 
 function setFilter(btn, f) {
@@ -479,38 +322,33 @@ function setFilter(btn, f) {
 
 function matchFilter(row) {
   const p = pct(row.ssd_terisi, row.ssd_digunakan);
-  if (currentFilter === 'full') return p === 100;
-  if (currentFilter === 'high') return p >= 50 && p < 100;
-  if (currentFilter === 'low')  return p > 0 && p < 50;
-  if (currentFilter === 'zero') return p === 0;
+  if (currentFilter==='full') return p===100;
+  if (currentFilter==='high') return p>=50 && p<100;
+  if (currentFilter==='low')  return p>0 && p<50;
+  if (currentFilter==='zero') return p===0;
   return true;
 }
 
 function renderTable() {
   const q = document.getElementById('search').value.toLowerCase();
   const sort = document.getElementById('sort-sel').value;
-
   let rows = allData
     .filter(r => r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q))
     .filter(matchFilter);
 
-  if (sort === 'pct-desc') rows.sort((a,b) => pct(b.ssd_terisi,b.ssd_digunakan) - pct(a.ssd_terisi,a.ssd_digunakan));
-  else if (sort === 'pct-asc') rows.sort((a,b) => pct(a.ssd_terisi,a.ssd_digunakan) - pct(b.ssd_terisi,b.ssd_digunakan));
-  else if (sort === 'jml-desc') rows.sort((a,b) => parseInt(b.ssd_jml) - parseInt(a.ssd_jml));
-  else rows.sort((a,b) => a.kodeurusan.localeCompare(b.kodeurusan));
+  if (sort==='pct-desc') rows.sort((a,b)=>pct(b.ssd_terisi,b.ssd_digunakan)-pct(a.ssd_terisi,a.ssd_digunakan));
+  else if (sort==='pct-asc') rows.sort((a,b)=>pct(a.ssd_terisi,a.ssd_digunakan)-pct(b.ssd_terisi,b.ssd_digunakan));
+  else if (sort==='jml-desc') rows.sort((a,b)=>parseInt(b.ssd_jml)-parseInt(a.ssd_jml));
+  else rows.sort((a,b)=>a.kodeurusan.localeCompare(b.kodeurusan));
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok dengan filter.</div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
     return;
   }
-
   tbody.innerHTML = rows.map(r => {
     const p = pct(r.ssd_terisi, r.ssd_digunakan);
-    const bc = barClass(p);
-    const short = r.namaurusan
-      .replace('URUSAN PEMERINTAHAN BIDANG ', '')
-      .replace('URUSAN PEMERINTAHAN ', '');
+    const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
     return `<tr>
       <td class="td-kode">${r.kodeurusan}</td>
       <td class="td-nama">${short}<span>${r.namaurusan}</span></td>
@@ -522,7 +360,7 @@ function renderTable() {
       <td class="td-num">${fmt(r.ssd_ver_pembina)}</td>
       <td class="td-num">${fmt(r.ssd_final)}</td>
       <td class="td-bar-cell">
-        <div class="mini-bar-wrap"><div class="mini-bar ${bc}" style="width:${p}%"></div></div>
+        <div class="mini-bar-wrap"><div class="mini-bar ${barClass(p)}" style="width:${p}%"></div></div>
         <span class="mini-pct">${p}%</span><span class="tag ${tagClass(p)}">${tagLabel(p)}</span>
       </td>
     </tr>`;
@@ -530,53 +368,49 @@ function renderTable() {
 }
 
 function renderStats() {
-  const tot_urusan   = allData.length;
-  const tot_induk    = allData.reduce((s,r) => s + parseInt(r.ssd_jml), 0);
-  const tot_digunakan= allData.reduce((s,r) => s + parseInt(r.ssd_digunakan), 0);
-  const tot_terisi   = allData.reduce((s,r) => s + parseInt(r.ssd_terisi), 0);
-  const tot_belum    = allData.reduce((s,r) => s + parseInt(r.ssd_tidakterisi), 0);
-  const tot_disabled = allData.reduce((s,r) => s + parseInt(r.ssd_disabled), 0);
-
-  document.getElementById('s-urusan').textContent   = tot_urusan;
-  document.getElementById('s-induk').textContent    = fmt(tot_induk);
-  document.getElementById('s-digunakan').textContent= fmt(tot_digunakan);
-  document.getElementById('s-terisi').textContent   = fmt(tot_terisi);
-  document.getElementById('s-belum').textContent    = fmt(tot_belum);
-  document.getElementById('s-disabled').textContent = fmt(tot_disabled);
-
-  const p = tot_digunakan > 0 ? Math.round((tot_terisi / tot_digunakan) * 100) : 0;
-  document.getElementById('overall-pct').textContent = p + '%';
-  setTimeout(() => { document.getElementById('overall-bar').style.width = p + '%'; }, 300);
+  const tot_urusan    = allData.length;
+  const tot_induk     = allData.reduce((s,r)=>s+parseInt(r.ssd_jml),0);
+  const tot_digunakan = allData.reduce((s,r)=>s+parseInt(r.ssd_digunakan),0);
+  const tot_terisi    = allData.reduce((s,r)=>s+parseInt(r.ssd_terisi),0);
+  const tot_belum     = allData.reduce((s,r)=>s+parseInt(r.ssd_tidakterisi),0);
+  const tot_disabled  = allData.reduce((s,r)=>s+parseInt(r.ssd_disabled),0);
+  document.getElementById('s-urusan').textContent    = tot_urusan;
+  document.getElementById('s-induk').textContent     = fmt(tot_induk);
+  document.getElementById('s-digunakan').textContent = fmt(tot_digunakan);
+  document.getElementById('s-terisi').textContent    = fmt(tot_terisi);
+  document.getElementById('s-belum').textContent     = fmt(tot_belum);
+  document.getElementById('s-disabled').textContent  = fmt(tot_disabled);
+  const p = tot_digunakan>0 ? Math.round((tot_terisi/tot_digunakan)*100) : 0;
+  document.getElementById('overall-pct').textContent = p+'%';
+  setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
 }
 
-async function loadData() {
+async function loadData(tahun) {
+  tahun = tahun || '2025';
+  const file = FILE_MAP[tahun] || FILE_MAP['2025'];
+  document.getElementById('live-label').textContent = 'memuat...';
   try {
-    const res = await fetch('data/rekap.json?_=' + Date.now());
+    const res = await fetch(file + '?_=' + Date.now());
     const json = await res.json();
     allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
 
     const meta = json.meta || {};
-    const thn = meta.tahun || '2025';
-
     let updated = '—';
     if (meta.last_updated && meta.last_updated !== '—') {
       try {
         const raw = meta.last_updated.includes('+') || meta.last_updated.endsWith('Z')
-          ? meta.last_updated
-          : meta.last_updated + '+08:00';
+          ? meta.last_updated : meta.last_updated + '+08:00';
         updated = new Date(raw).toLocaleString('id-ID', {
-          timeZone: 'Asia/Makassar',
-          day: '2-digit', month: 'long', year: 'numeric',
-          hour: '2-digit', minute: '2-digit'
+          timeZone:'Asia/Makassar', day:'2-digit', month:'long',
+          year:'numeric', hour:'2-digit', minute:'2-digit'
         });
       } catch(e) { updated = meta.last_updated; }
     }
 
     document.getElementById('live-label').textContent  = 'data tersedia';
-    document.getElementById('tahun-badge').textContent = thn;
-    document.getElementById('tahun-hero').textContent  = thn;
-    document.getElementById('last-updated').textContent= updated !== '—' ? 'Per: ' + updated + ' WITA' : '';
-    document.getElementById('footer-updated').textContent = updated !== '—' ? 'Data per: ' + updated + ' WITA' : '';
+    document.getElementById('tahun-hero').textContent  = tahun;
+    document.getElementById('last-updated').textContent= updated!=='—' ? 'Per: '+updated+' WITA' : '';
+    document.getElementById('footer-updated').textContent = updated!=='—' ? 'Data per: '+updated+' WITA' : '';
 
     renderStats();
     renderTable();
@@ -587,7 +421,7 @@ async function loadData() {
   }
 }
 
-loadData();
+loadData('2025');
 </script>
 </body>
 </html>
