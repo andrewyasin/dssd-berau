@@ -59,6 +59,18 @@ body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);mi
 /* MAIN */
 main{max-width:1280px;margin:0 auto;padding:1.25rem 1rem}
 
+/* RINGKASAN TARGET */
+.ringkasan-box{background:rgba(212,160,23,0.08);border:1px solid var(--border-emas);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.ringkasan-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);margin-bottom:.75rem}
+.ringkasan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rg-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;text-align:center}
+.rg-label{font-size:10px;color:var(--abu);margin-bottom:3px}
+.rg-val{font-size:16px;font-weight:700;font-family:var(--mono)}
+.rg-sub{font-size:10px;color:var(--abu);margin-top:2px}
+.rg-hijau{color:#5ECC6E}
+.rg-emas{color:var(--emas-terang)}
+.rg-putih{color:var(--putih)}
+
 /* STAT CARDS */
 .stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;position:relative;overflow:hidden}
@@ -170,6 +182,8 @@ footer a{color:var(--emas-terang);text-decoration:none}
   .stat-cards{grid-template-columns:repeat(3,1fr)}
   .hero-banner{padding:2rem}
   .tahun-bar{padding:.75rem 2rem}
+  .ringkasan-grid{grid-template-columns:repeat(3,1fr)}
+  .ringkasan-box{padding:1.25rem 1.5rem}
   .rg-val{font-size:22px}
 }
 </style>
@@ -203,6 +217,27 @@ footer a{color:var(--emas-terang);text-decoration:none}
 </div>
 
 <main>
+  <!-- RINGKASAN TARGET -->
+  <div class="ringkasan-box">
+    <div class="ringkasan-title">📋 Ringkasan Keterisian</div>
+    <div class="ringkasan-grid">
+      <div class="rg-item">
+        <div class="rg-label">Terisi</div>
+        <div class="rg-val rg-hijau" id="r-terisi">—</div>
+        <div class="rg-sub">dari data digunakan</div>
+      </div>
+      <div class="rg-item">
+        <div class="rg-label">Progress</div>
+        <div class="rg-val rg-emas" id="r-pct">—%</div>
+        <div class="rg-sub">tingkat keterisian</div>
+      </div>
+      <div class="rg-item">
+        <div class="rg-label">Belum Terisi</div>
+        <div class="rg-val rg-putih" id="r-belum">—</div>
+        <div class="rg-sub">perlu ditindaklanjuti</div>
+      </div>
+    </div>
+  </div>
 
   <!-- STAT CARDS -->
   <div class="stat-cards">
