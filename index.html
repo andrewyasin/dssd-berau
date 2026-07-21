@@ -32,114 +32,159 @@ html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);min-height:100vh;font-size:14px;line-height:1.6}
 
 /* HEADER */
-.site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
-.logo-text{font-size:14px;font-weight:700;color:var(--emas-terang);letter-spacing:.01em}
+.site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 1.5rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
+.logo-text{font-size:14px;font-weight:700;color:var(--emas-terang)}
 .logo-sub{font-size:11px;color:var(--putih2);font-weight:400}
-.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.live-dot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--emas-terang);font-family:var(--mono)}
-.live-dot::before{content:'';width:7px;height:7px;background:var(--emas-terang);border-radius:50%;animation:blink 2s infinite}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.live-dot{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--emas-terang);font-family:var(--mono)}
+.live-dot::before{content:'';width:6px;height:6px;background:var(--emas-terang);border-radius:50%;animation:blink 2s infinite;flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-.last-updated{font-size:11px;color:var(--abu);font-family:var(--mono)}
+.last-updated{font-size:10px;color:var(--abu);font-family:var(--mono)}
 
 /* BANNER */
-.hero-banner{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 60%,var(--hijau-muda) 100%);border-bottom:3px solid var(--emas);padding:1.5rem 2rem;position:relative;overflow:hidden}
-.hero-banner::before{content:'🐢';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-size:80px;opacity:.07;user-select:none}
+.hero-banner{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 60%,var(--hijau-muda) 100%);border-bottom:3px solid var(--emas);padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+.hero-banner::before{content:'🐢';position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:60px;opacity:.07;user-select:none}
 .hero-inner{max-width:1280px;margin:0 auto}
-.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--emas-terang);text-transform:uppercase;margin-bottom:4px}
-.hero-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
-.hero-sub{font-size:13px;color:var(--putih2)}
+.hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--emas-terang);text-transform:uppercase;margin-bottom:4px}
+.hero-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.3}
+.hero-sub{font-size:12px;color:var(--putih2)}
 
 /* TAHUN SWITCHER */
-.tahun-bar{background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px}
-.tahun-label{font-size:12px;color:var(--abu);font-weight:500;margin-right:4px}
-.tahun-btn{font-size:13px;font-weight:600;font-family:var(--mono);padding:5px 16px;border-radius:999px;border:1.5px solid var(--border-emas);background:transparent;color:var(--abu);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.tahun-bar{background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tahun-label{font-size:11px;color:var(--abu);font-weight:500}
+.tahun-btn{font-size:12px;font-weight:600;font-family:var(--mono);padding:4px 14px;border-radius:999px;border:1.5px solid var(--border-emas);background:transparent;color:var(--abu);cursor:pointer;transition:all .15s}
 .tahun-btn:hover{border-color:var(--emas-terang);color:var(--emas-terang)}
 .tahun-btn.active{background:var(--emas);border-color:var(--emas);color:var(--hijau-gelap)}
 
 /* MAIN */
-main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
+main{max-width:1280px;margin:0 auto;padding:1.25rem 1rem}
+
+/* RINGKASAN TARGET */
+.ringkasan-box{background:rgba(212,160,23,0.08);border:1px solid var(--border-emas);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.ringkasan-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);margin-bottom:.75rem}
+.ringkasan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rg-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;text-align:center}
+.rg-label{font-size:10px;color:var(--abu);margin-bottom:3px}
+.rg-val{font-size:16px;font-weight:700;font-family:var(--mono)}
+.rg-sub{font-size:10px;color:var(--abu);margin-top:2px}
+.rg-hijau{color:#5ECC6E}
+.rg-emas{color:var(--emas-terang)}
+.rg-putih{color:var(--putih)}
 
 /* STAT CARDS */
-.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hijau-muda);opacity:0;transition:opacity .2s}
-.stat-card:hover{border-color:var(--hijau-rim);transform:translateY(-1px)}
-.stat-card:hover::before{opacity:1}
 .stat-card.accent{border-color:var(--border-emas);background:var(--emas-muda)}
 .stat-card.accent::before{background:var(--emas);opacity:1}
-.sc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--abu);margin-bottom:8px}
-.sc-value{font-size:26px;font-weight:700;font-family:var(--mono);color:var(--putih)}
+.sc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--abu);margin-bottom:4px}
+.sc-tooltip{font-size:10px;color:var(--abu);opacity:.7;margin-top:2px;line-height:1.4}
+.sc-value{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--putih)}
 .sc-value.hijau{color:#5ECC6E}
 .sc-value.emas{color:var(--emas-terang)}
 .sc-value.merah{color:#FF6B6B}
 
 /* PROGRESS */
-.progress-section{background:var(--card);border:1px solid var(--border-emas);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
-.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
-.ps-title{font-size:13px;font-weight:600;color:var(--putih2)}
-.ps-pct{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--emas-terang)}
-.progress-bar-wrap{height:12px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05)}
+.progress-section{background:var(--card);border:1px solid var(--border-emas);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.ps-title{font-size:12px;font-weight:600;color:var(--putih2)}
+.ps-pct{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--emas-terang)}
+.progress-bar-wrap{height:12px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;margin-bottom:8px}
 .progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hijau-muda),var(--emas-terang));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative}
-.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.15) 50%,transparent 100%);border-radius:999px}
-.progress-legend{display:flex;gap:1.5rem;flex-wrap:wrap}
-.pl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--abu)}
-.pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);border-radius:999px}
+.progress-legend{display:flex;gap:1rem;flex-wrap:wrap}
+.pl-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--abu)}
+.pl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
 /* CONTROLS */
-.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-.search-wrap{position:relative;flex:1;min-width:200px}
-.search-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:var(--putih);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
+.controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:.75rem}
+.search-wrap{position:relative;flex:1;min-width:160px}
+.search-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 10px 7px 32px;color:var(--putih);font-family:var(--font);font-size:12px;outline:none;transition:border-color .2s}
 .search-wrap input:focus{border-color:var(--emas)}
 .search-wrap input::placeholder{color:var(--abu)}
-.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:15px;pointer-events:none}
-.filter-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 13px;color:var(--abu);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:14px;pointer-events:none}
+.filter-row{display:flex;gap:5px;flex-wrap:wrap;width:100%}
+.filter-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--abu);font-family:var(--font);font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
 .filter-btn:hover{border-color:var(--emas);color:var(--emas-terang)}
 .filter-btn.active{border-color:var(--emas);color:var(--hijau-gelap);background:var(--emas);font-weight:600}
-.sort-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--abu);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;appearance:none}
-.sort-select:focus{border-color:var(--emas)}
+.sort-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--abu);font-family:var(--font);font-size:11px;outline:none;cursor:pointer;appearance:none;flex-shrink:0}
 
-/* TABLE */
+/* DESKTOP TABLE */
 .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
-table{width:100%;border-collapse:collapse;min-width:780px}
-thead th{background:var(--hijau-tua);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);border-bottom:2px solid var(--emas);white-space:nowrap}
+.table-wrap table{width:100%;border-collapse:collapse;min-width:700px}
+thead th{background:var(--hijau-tua);padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--emas-terang);border-bottom:2px solid var(--emas);white-space:nowrap;cursor:help}
+thead th .th-hint{display:block;font-size:9px;font-weight:400;color:var(--abu);text-transform:none;letter-spacing:0;margin-top:1px}
 tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:rgba(26,107,47,0.2)}
-td{padding:10px 14px;font-size:13px;color:var(--putih2);vertical-align:middle}
-.td-kode{font-family:var(--mono);font-size:11px;color:var(--emas);font-weight:500}
-.td-nama{font-weight:600;color:var(--putih);max-width:280px}
-.td-nama span{font-size:10px;font-weight:400;color:var(--abu);display:block;margin-top:1px}
-.td-num{font-family:var(--mono);font-size:12px;text-align:right}
+td{padding:9px 12px;font-size:12px;color:var(--putih2);vertical-align:middle}
+.td-kode{font-family:var(--mono);font-size:10px;color:var(--emas);font-weight:500}
+.td-nama{font-weight:600;color:var(--putih);max-width:220px}
+.td-nama span{font-size:9px;font-weight:400;color:var(--abu);display:block;margin-top:1px}
+.td-num{font-family:var(--mono);font-size:11px;text-align:right}
 .td-num.total{color:var(--putih2)}
-.td-bar-cell{width:130px}
-.mini-bar-wrap{height:6px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.td-bar-cell{width:110px}
+.mini-bar-wrap{height:5px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-bottom:3px}
 .mini-bar{height:100%;border-radius:99px;transition:width .6s ease}
 .mini-bar.full{background:linear-gradient(90deg,#218A3C,#5ECC6E)}
 .mini-bar.high{background:linear-gradient(90deg,var(--hijau-muda),#8FD98F)}
 .mini-bar.mid{background:linear-gradient(90deg,var(--emas),var(--emas-terang))}
 .mini-bar.low{background:linear-gradient(90deg,#C0392B,#E74C3C)}
 .mini-pct{font-size:10px;color:var(--abu);font-family:var(--mono)}
-.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;font-family:var(--mono);margin-left:4px;letter-spacing:.03em}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;font-family:var(--mono);margin-left:3px}
 .tag-full{background:rgba(94,204,110,.18);color:#5ECC6E;border:1px solid rgba(94,204,110,.3)}
 .tag-high{background:rgba(26,107,47,.25);color:#8FD98F;border:1px solid rgba(143,217,143,.25)}
 .tag-mid{background:var(--emas-muda);color:var(--emas-terang);border:1px solid var(--border-emas)}
 .tag-low{background:var(--merah-muda);color:#FF6B6B;border:1px solid rgba(192,57,43,.3)}
 .tag-zero{background:rgba(255,255,255,.05);color:var(--abu);border:1px solid var(--border)}
-.empty-state{text-align:center;padding:4rem;color:var(--abu);font-size:13px}
+
+/* MOBILE CARD VIEW */
+.card-list{display:none;flex-direction:column;gap:8px}
+.urusan-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;transition:border-color .15s}
+.urusan-card:hover{border-color:var(--hijau-rim)}
+.uc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
+.uc-kode{font-family:var(--mono);font-size:10px;color:var(--emas);font-weight:600;flex-shrink:0}
+.uc-nama{font-size:13px;font-weight:600;color:var(--putih);line-height:1.3}
+.uc-nama-full{font-size:10px;color:var(--abu);margin-top:1px}
+.uc-bar-wrap{height:8px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.uc-bar{height:100%;border-radius:99px}
+.uc-pct-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.uc-pct{font-size:15px;font-weight:700;font-family:var(--mono);color:var(--emas-terang)}
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.uc-stat{background:rgba(255,255,255,0.04);border-radius:6px;padding:6px 8px;text-align:center}
+.uc-stat-label{font-size:9px;color:var(--abu);margin-bottom:2px}
+.uc-stat-label .hint{display:block;font-size:8px;opacity:.7}
+.uc-stat-val{font-size:13px;font-weight:600;font-family:var(--mono);color:var(--putih2)}
+.uc-stat-val.g{color:#5ECC6E}
+.uc-stat-val.a{color:var(--emas-terang)}
+.uc-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.uc-extra-item{background:rgba(255,255,255,0.03);border-radius:6px;padding:5px 8px;text-align:center}
+.uc-extra-label{font-size:9px;color:var(--abu);margin-bottom:1px}
+.uc-extra-val{font-size:12px;font-weight:600;font-family:var(--mono);color:var(--putih2)}
+
+.empty-state{text-align:center;padding:3rem;color:var(--abu);font-size:13px}
 
 /* FOOTER */
-footer{text-align:center;padding:1.5rem 2rem;color:var(--abu);font-size:11px;border-top:1px solid var(--border);margin-top:2.5rem;background:var(--hijau-tua)}
+footer{text-align:center;padding:1.25rem 1rem;color:var(--abu);font-size:11px;border-top:1px solid var(--border);margin-top:2rem;background:var(--hijau-tua)}
 footer a{color:var(--emas-terang);text-decoration:none}
-footer a:hover{text-decoration:underline}
-.footer-divider{margin:0 8px;opacity:.4}
+.footer-divider{margin:0 6px;opacity:.4}
 
+/* RESPONSIVE */
 @media(max-width:640px){
-  .site-header{padding:0 1rem;height:auto;min-height:60px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
-  .hero-banner{padding:1.25rem 1rem}
-  .tahun-bar{padding:.75rem 1rem}
-  main{padding:1rem}
-  .hero-banner::before{display:none}
+  .site-header{padding:0 1rem}
   .last-updated{display:none}
+  .table-wrap{display:none}
+  .card-list{display:flex}
+  .stat-cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(min-width:641px){
+  main{padding:1.75rem 2rem}
+  .stat-cards{grid-template-columns:repeat(3,1fr)}
+  .hero-banner{padding:2rem}
+  .tahun-bar{padding:.75rem 2rem}
+  .ringkasan-grid{grid-template-columns:repeat(3,1fr)}
+  .ringkasan-box{padding:1.25rem 1.5rem}
+  .rg-val{font-size:22px}
 }
 </style>
 </head>
@@ -172,33 +217,63 @@ footer a:hover{text-decoration:underline}
 </div>
 
 <main>
+  <!-- RINGKASAN TARGET -->
+  <div class="ringkasan-box">
+    <div class="ringkasan-title">📋 Ringkasan Keterisian</div>
+    <div class="ringkasan-grid">
+      <div class="rg-item">
+        <div class="rg-label">Terisi</div>
+        <div class="rg-val rg-hijau" id="r-terisi">—</div>
+        <div class="rg-sub">dari data digunakan</div>
+      </div>
+      <div class="rg-item">
+        <div class="rg-label">Progress</div>
+        <div class="rg-val rg-emas" id="r-pct">—%</div>
+        <div class="rg-sub">tingkat keterisian</div>
+      </div>
+      <div class="rg-item">
+        <div class="rg-label">Belum Terisi</div>
+        <div class="rg-val rg-putih" id="r-belum">—</div>
+        <div class="rg-sub">perlu ditindaklanjuti</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
   <div class="stat-cards">
     <div class="stat-card accent">
       <div class="sc-label">Total Urusan</div>
       <div class="sc-value emas" id="s-urusan">—</div>
+      <div class="sc-tooltip">Jumlah urusan pemerintahan yang dipantau</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Data Induk</div>
       <div class="sc-value" id="s-induk">—</div>
+      <div class="sc-tooltip">Total variabel data dalam DSSD</div>
     </div>
     <div class="stat-card">
-      <div class="sc-label">Data Digunakan</div>
+      <div class="sc-label">Digunakan</div>
       <div class="sc-value" id="s-digunakan">—</div>
+      <div class="sc-tooltip">Data yang aktif diisi OPD (tidak disabled)</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Sudah Terisi</div>
       <div class="sc-value hijau" id="s-terisi">—</div>
+      <div class="sc-tooltip">Data yang sudah diinput oleh OPD</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Belum Terisi</div>
       <div class="sc-value emas" id="s-belum">—</div>
+      <div class="sc-tooltip">Data aktif yang belum diisi OPD</div>
     </div>
     <div class="stat-card">
       <div class="sc-label">Tidak Aktif</div>
       <div class="sc-value merah" id="s-disabled">—</div>
+      <div class="sc-tooltip">Data yang dinonaktifkan (tidak wajib diisi)</div>
     </div>
   </div>
 
+  <!-- PROGRESS -->
   <div class="progress-section">
     <div class="ps-header">
       <div class="ps-title">📊 Progress Keterisian Keseluruhan</div>
@@ -210,48 +285,57 @@ footer a:hover{text-decoration:underline}
     <div class="progress-legend">
       <div class="pl-item"><div class="pl-dot" style="background:#5ECC6E"></div>Sudah terisi</div>
       <div class="pl-item"><div class="pl-dot" style="background:var(--emas-terang)"></div>Belum terisi</div>
-      <div class="pl-item"><div class="pl-dot" style="background:rgba(255,255,255,0.15)"></div>Tidak aktif (disabled)</div>
+      <div class="pl-item"><div class="pl-dot" style="background:rgba(255,255,255,0.15)"></div>Tidak aktif</div>
     </div>
   </div>
 
+  <!-- CONTROLS -->
   <div class="controls">
     <div class="search-wrap">
       <span class="search-icon">⌕</span>
-      <input type="text" id="search" placeholder="Cari nama urusan atau kode..." oninput="renderTable()">
+      <input type="text" id="search" placeholder="Cari urusan atau kode..." oninput="renderAll()">
     </div>
-    <button class="filter-btn active" onclick="setFilter(this,'all')">Semua</button>
-    <button class="filter-btn" onclick="setFilter(this,'full')">100%</button>
-    <button class="filter-btn" onclick="setFilter(this,'high')">≥50%</button>
-    <button class="filter-btn" onclick="setFilter(this,'low')">&lt;50%</button>
-    <button class="filter-btn" onclick="setFilter(this,'zero')">0%</button>
-    <select class="sort-select" id="sort-sel" onchange="renderTable()">
+    <select class="sort-select" id="sort-sel" onchange="renderAll()">
       <option value="kode">Urut: Kode</option>
-      <option value="pct-desc">Urut: % Terisi ↓</option>
-      <option value="pct-asc">Urut: % Terisi ↑</option>
-      <option value="jml-desc">Urut: Jml Data ↓</option>
+      <option value="pct-desc">% Terisi ↓</option>
+      <option value="pct-asc">% Terisi ↑</option>
+      <option value="jml-desc">Jml Data ↓</option>
     </select>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter(this,'all')">Semua</button>
+      <button class="filter-btn" onclick="setFilter(this,'full')">100%</button>
+      <button class="filter-btn" onclick="setFilter(this,'high')">≥50%</button>
+      <button class="filter-btn" onclick="setFilter(this,'low')">&lt;50%</button>
+      <button class="filter-btn" onclick="setFilter(this,'zero')">0%</button>
+    </div>
   </div>
 
+  <!-- DESKTOP TABLE -->
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>Kode</th>
-          <th style="min-width:240px">Nama Urusan</th>
-          <th>Data Induk</th>
-          <th>Digunakan</th>
-          <th>Terisi</th>
-          <th>Belum Terisi</th>
-          <th>Ver. Walidata</th>
-          <th>Ver. Pembina</th>
-          <th>Final</th>
-          <th style="min-width:130px">% Keterisian</th>
+          <th style="min-width:200px">Nama Urusan</th>
+          <th>Data Induk<span class="th-hint">Total variabel</span></th>
+          <th>Digunakan<span class="th-hint">Aktif diisi</span></th>
+          <th>Terisi<span class="th-hint">Sudah diinput</span></th>
+          <th>Belum<span class="th-hint">Perlu diisi</span></th>
+          <th>Ver. Walidata<span class="th-hint">Diverifikasi</span></th>
+          <th>Ver. Pembina<span class="th-hint">Disetujui</span></th>
+          <th>Final<span class="th-hint">Selesai</span></th>
+          <th style="min-width:110px">% Keterisian</th>
         </tr>
       </thead>
       <tbody id="tbody">
         <tr><td colspan="10"><div class="empty-state">Memuat data...</div></td></tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- MOBILE CARD LIST -->
+  <div class="card-list" id="card-list">
+    <div class="empty-state">Memuat data...</div>
   </div>
 </main>
 
@@ -265,89 +349,76 @@ footer a:hover{text-decoration:underline}
 <script>
 let allData = [];
 let currentFilter = 'all';
-let currentTahun = '2025';
+let currentTahun  = '2025';
 
 const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
-
 const FILE_MAP = {
   '2023': 'data/rekap-2023.json',
   '2024': 'data/rekap-2024.json',
   '2025': 'data/rekap.json',
 };
 
-function switchTahun(tahun, btn) {
-  currentTahun = tahun;
-  document.querySelectorAll('.tahun-btn').forEach(b => b.classList.remove('active'));
+function switchTahun(t, btn) {
+  currentTahun = t;
+  document.querySelectorAll('.tahun-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tahun-hero').textContent = tahun;
-  // Reset filter & search
+  document.getElementById('tahun-hero').textContent = t;
   document.getElementById('search').value = '';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector('.filter-btn').classList.add('active');
   currentFilter = 'all';
   document.getElementById('overall-bar').style.width = '0%';
-  loadData(tahun);
+  loadData(t);
 }
 
 function pct(terisi, digunakan) {
-  const d = parseInt(digunakan) || 0;
-  return d === 0 ? 0 : Math.round((parseInt(terisi) / d) * 100);
+  const d = parseInt(digunakan)||0;
+  return d===0 ? 0 : Math.round((parseInt(terisi)/d)*100);
 }
-function tagClass(p) {
-  if (p===100) return 'tag-full';
-  if (p>=50)   return 'tag-high';
-  if (p>0)     return 'tag-mid';
-  return 'tag-zero';
-}
-function barClass(p) {
-  if (p===100) return 'full';
-  if (p>=50)   return 'high';
-  if (p>0)     return 'mid';
-  return 'low';
-}
-function tagLabel(p) {
-  if (p===100) return 'PENUH';
-  if (p>=50)   return 'BAIK';
-  if (p>0)     return 'PROSES';
-  return 'KOSONG';
-}
-function fmt(n) { return parseInt(n).toLocaleString('id-ID'); }
+function tagClass(p){return p===100?'tag-full':p>=50?'tag-high':p>0?'tag-mid':'tag-zero'}
+function barClass(p){return p===100?'full':p>=50?'high':p>0?'mid':'low'}
+function tagLabel(p){return p===100?'PENUH':p>=50?'BAIK':p>0?'PROSES':'KOSONG'}
+function fmt(n){return parseInt(n).toLocaleString('id-ID')}
 
 function setFilter(btn, f) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   currentFilter = f;
-  renderTable();
+  renderAll();
 }
-
 function matchFilter(row) {
   const p = pct(row.ssd_terisi, row.ssd_digunakan);
   if (currentFilter==='full') return p===100;
-  if (currentFilter==='high') return p>=50 && p<100;
-  if (currentFilter==='low')  return p>0 && p<50;
+  if (currentFilter==='high') return p>=50&&p<100;
+  if (currentFilter==='low')  return p>0&&p<50;
   if (currentFilter==='zero') return p===0;
   return true;
 }
-
-function renderTable() {
+function getFiltered() {
   const q = document.getElementById('search').value.toLowerCase();
   const sort = document.getElementById('sort-sel').value;
   let rows = allData
-    .filter(r => r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q))
+    .filter(r=>r.namaurusan.toLowerCase().includes(q)||r.kodeurusan.includes(q))
     .filter(matchFilter);
-
   if (sort==='pct-desc') rows.sort((a,b)=>pct(b.ssd_terisi,b.ssd_digunakan)-pct(a.ssd_terisi,a.ssd_digunakan));
   else if (sort==='pct-asc') rows.sort((a,b)=>pct(a.ssd_terisi,a.ssd_digunakan)-pct(b.ssd_terisi,b.ssd_digunakan));
   else if (sort==='jml-desc') rows.sort((a,b)=>parseInt(b.ssd_jml)-parseInt(a.ssd_jml));
   else rows.sort((a,b)=>a.kodeurusan.localeCompare(b.kodeurusan));
-
+  return rows;
+}
+function renderAll() {
+  renderTable();
+  renderCards();
+}
+function renderTable() {
+  const rows = getFiltered();
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
     tbody.innerHTML='<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
     return;
   }
-  tbody.innerHTML = rows.map(r => {
-    const p = pct(r.ssd_terisi, r.ssd_digunakan);
+  tbody.innerHTML = rows.map(r=>{
+    const p = pct(r.ssd_terisi,r.ssd_digunakan);
     const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
     return `<tr>
       <td class="td-kode">${r.kodeurusan}</td>
@@ -366,7 +437,61 @@ function renderTable() {
     </tr>`;
   }).join('');
 }
-
+function renderCards() {
+  const rows = getFiltered();
+  const cl = document.getElementById('card-list');
+  if (!rows.length) {
+    cl.innerHTML='<div class="empty-state">Tidak ada data yang cocok.</div>';
+    return;
+  }
+  cl.innerHTML = rows.map(r=>{
+    const p = pct(r.ssd_terisi,r.ssd_digunakan);
+    const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
+    return `<div class="urusan-card">
+      <div class="uc-header">
+        <div>
+          <div class="uc-kode">${r.kodeurusan}</div>
+          <div class="uc-nama">${short}</div>
+          <div class="uc-nama-full">${r.namaurusan}</div>
+        </div>
+        <span class="tag ${tagClass(p)}" style="font-size:10px;flex-shrink:0">${tagLabel(p)}</span>
+      </div>
+      <div class="uc-bar-wrap"><div class="uc-bar mini-bar ${barClass(p)}" style="width:${p}%"></div></div>
+      <div class="uc-pct-row">
+        <span class="uc-pct">${p}% terisi</span>
+        <span style="font-size:10px;color:var(--abu)">${fmt(r.ssd_terisi)} dari ${fmt(r.ssd_digunakan)} data</span>
+      </div>
+      <div class="uc-grid">
+        <div class="uc-stat">
+          <div class="uc-stat-label">Data Induk<span class="hint">Total variabel</span></div>
+          <div class="uc-stat-val">${fmt(r.ssd_jml)}</div>
+        </div>
+        <div class="uc-stat">
+          <div class="uc-stat-label">Terisi<span class="hint">Sudah diinput</span></div>
+          <div class="uc-stat-val g">${fmt(r.ssd_terisi)}</div>
+        </div>
+        <div class="uc-stat">
+          <div class="uc-stat-label">Belum<span class="hint">Perlu diisi</span></div>
+          <div class="uc-stat-val a">${fmt(r.ssd_tidakterisi)}</div>
+        </div>
+      </div>
+      <div class="uc-extra">
+        <div class="uc-extra-item">
+          <div class="uc-extra-label">Ver. Walidata</div>
+          <div class="uc-extra-val">${fmt(r.ssd_ver_walidata)}</div>
+        </div>
+        <div class="uc-extra-item">
+          <div class="uc-extra-label">Ver. Pembina</div>
+          <div class="uc-extra-val">${fmt(r.ssd_ver_pembina)}</div>
+        </div>
+        <div class="uc-extra-item">
+          <div class="uc-extra-label">Final</div>
+          <div class="uc-extra-val">${fmt(r.ssd_final)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 function renderStats() {
   const tot_urusan    = allData.length;
   const tot_induk     = allData.reduce((s,r)=>s+parseInt(r.ssd_jml),0);
@@ -374,53 +499,52 @@ function renderStats() {
   const tot_terisi    = allData.reduce((s,r)=>s+parseInt(r.ssd_terisi),0);
   const tot_belum     = allData.reduce((s,r)=>s+parseInt(r.ssd_tidakterisi),0);
   const tot_disabled  = allData.reduce((s,r)=>s+parseInt(r.ssd_disabled),0);
+  const p = tot_digunakan>0 ? Math.round((tot_terisi/tot_digunakan)*100) : 0;
+
   document.getElementById('s-urusan').textContent    = tot_urusan;
   document.getElementById('s-induk').textContent     = fmt(tot_induk);
   document.getElementById('s-digunakan').textContent = fmt(tot_digunakan);
   document.getElementById('s-terisi').textContent    = fmt(tot_terisi);
   document.getElementById('s-belum').textContent     = fmt(tot_belum);
   document.getElementById('s-disabled').textContent  = fmt(tot_disabled);
-  const p = tot_digunakan>0 ? Math.round((tot_terisi/tot_digunakan)*100) : 0;
   document.getElementById('overall-pct').textContent = p+'%';
-  setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
+  document.getElementById('r-terisi').textContent    = fmt(tot_terisi);
+  document.getElementById('r-pct').textContent       = p+'%';
+  document.getElementById('r-belum').textContent     = fmt(tot_belum);
+  setTimeout(()=>{document.getElementById('overall-bar').style.width=p+'%'},300);
 }
-
 async function loadData(tahun) {
-  tahun = tahun || '2025';
-  const file = FILE_MAP[tahun] || FILE_MAP['2025'];
+  tahun = tahun||'2025';
+  const file = FILE_MAP[tahun]||FILE_MAP['2025'];
   document.getElementById('live-label').textContent = 'memuat...';
   try {
-    const res = await fetch(file + '?_=' + Date.now());
+    const res = await fetch(file+'?_='+Date.now());
     const json = await res.json();
-    allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
-
-    const meta = json.meta || {};
+    allData = (json.data||[]).filter(r=>!EXCLUDE_KODE.includes(r.kodeurusan));
+    const meta = json.meta||{};
     let updated = '—';
-    if (meta.last_updated && meta.last_updated !== '—') {
+    if (meta.last_updated && meta.last_updated!=='—') {
       try {
-        const raw = meta.last_updated.includes('+') || meta.last_updated.endsWith('Z')
-          ? meta.last_updated : meta.last_updated + '+08:00';
-        updated = new Date(raw).toLocaleString('id-ID', {
-          timeZone:'Asia/Makassar', day:'2-digit', month:'long',
-          year:'numeric', hour:'2-digit', minute:'2-digit'
+        const raw = meta.last_updated.includes('+')||meta.last_updated.endsWith('Z')
+          ? meta.last_updated : meta.last_updated+'+08:00';
+        updated = new Date(raw).toLocaleString('id-ID',{
+          timeZone:'Asia/Makassar',day:'2-digit',month:'long',
+          year:'numeric',hour:'2-digit',minute:'2-digit'
         });
-      } catch(e) { updated = meta.last_updated; }
+      } catch(e){updated=meta.last_updated;}
     }
-
-    document.getElementById('live-label').textContent  = 'data tersedia';
-    document.getElementById('tahun-hero').textContent  = tahun;
-    document.getElementById('last-updated').textContent= updated!=='—' ? 'Per: '+updated+' WITA' : '';
-    document.getElementById('footer-updated').textContent = updated!=='—' ? 'Data per: '+updated+' WITA' : '';
-
+    document.getElementById('live-label').textContent   = 'data tersedia';
+    document.getElementById('tahun-hero').textContent   = tahun;
+    document.getElementById('last-updated').textContent = updated!=='—'?'Per: '+updated+' WITA':'';
+    document.getElementById('footer-updated').textContent = updated!=='—'?'Data per: '+updated+' WITA':'';
     renderStats();
-    renderTable();
+    renderAll();
   } catch(e) {
     document.getElementById('live-label').textContent = 'gagal memuat';
-    document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
+    document.getElementById('tbody').innerHTML='<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data.</div></td></tr>';
+    document.getElementById('card-list').innerHTML='<div class="empty-state">⚠️ Gagal memuat data.</div>';
   }
 }
-
 loadData('2025');
 </script>
 </body>
