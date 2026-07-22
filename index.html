@@ -1,732 +1,427 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Rekap DSSD - Kabupaten Berau</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS untuk Export Excel -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- jsPDF & AutoTable untuk Export PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        :root {
-            --primary: #134D22;
-            --primary-dark: #0A2E13;
-            --accent: #F0C040;
-            --accent-hover: #D9A828;
-            --bg-color: #F8FAF9;
-            --card-bg: #FFFFFF;
-            --text-main: #1E293B;
-            --text-muted: #64748B;
-            --border-color: #E2E8F0;
-            --radius: 8px;
-            --shadow: 0 4px 6px -1px rgba(19, 77, 34, 0.05), 0 2px 4px -1px rgba(19, 77, 34, 0.03);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekap Tahapan DSSD — KAB. BERAU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hijau:        #1A6B2F;
+  --hijau-tua:    #134D22;
+  --hijau-gelap:  #0D3618;
+  --hijau-muda:   #218A3C;
+  --hijau-rim:    rgba(26,107,47,0.35);
+  --emas:         #D4A017;
+  --emas-terang:  #F0C040;
+  --emas-muda:    rgba(212,160,23,0.15);
+  --emas-rim:     rgba(212,160,23,0.4);
+  --merah-muda:   rgba(192,57,43,0.15);
+  --putih:        #F7F9F4;
+  --putih2:       #D6E4D9;
+  --abu:          #7A9A80;
+  --border:       rgba(255,255,255,0.08);
+  --border-emas:  rgba(212,160,23,0.25);
+  --card:         rgba(255,255,255,0.05);
+  --font:         'Plus Jakarta Sans', sans-serif;
+  --mono:         'DM Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);min-height:100vh;font-size:14px;line-height:1.6}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+/* HEADER */
+.site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
+.logo-text{font-size:14px;font-weight:700;color:var(--emas-terang);letter-spacing:.01em}
+.logo-sub{font-size:11px;color:var(--putih2);font-weight:400}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-dot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--emas-terang);font-family:var(--mono)}
+.live-dot::before{content:'';width:7px;height:7px;background:var(--emas-terang);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.last-updated{font-size:11px;color:var(--abu);font-family:var(--mono)}
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding: 0;
-        }
+/* BANNER */
+.hero-banner{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 60%,var(--hijau-muda) 100%);border-bottom:3px solid var(--emas);padding:1.5rem 2rem;position:relative;overflow:hidden}
+.hero-banner::before{content:'🐢';position:absolute;right:2rem;top:50%;transform:translateY(-50%);font-size:80px;opacity:.07;user-select:none}
+.hero-inner{max-width:1280px;margin:0 auto}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--emas-terang);text-transform:uppercase;margin-bottom:4px}
+.hero-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.hero-sub{font-size:13px;color:var(--putih2)}
 
-        header {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-            color: white;
-            padding: 2rem 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-bottom: 4px solid var(--accent);
-        }
+/* TAHUN SWITCHER */
+.tahun-bar{background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px}
+.tahun-label{font-size:12px;color:var(--abu);font-weight:500;margin-right:4px}
+.tahun-btn{font-size:13px;font-weight:600;font-family:var(--mono);padding:5px 16px;border-radius:999px;border:1.5px solid var(--border-emas);background:transparent;color:var(--abu);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.tahun-btn:hover{border-color:var(--emas-terang);color:var(--emas-terang)}
+.tahun-btn.active{background:var(--emas);border-color:var(--emas);color:var(--hijau-gelap)}
 
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+/* MAIN */
+main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
 
-        @media(min-width: 768px) {
-            .header-container {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
+/* STAT CARDS */
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hijau-muda);opacity:0;transition:opacity .2s}
+.stat-card:hover{border-color:var(--hijau-rim);transform:translateY(-1px)}
+.stat-card:hover::before{opacity:1}
+.stat-card.accent{border-color:var(--border-emas);background:var(--emas-muda)}
+.stat-card.accent::before{background:var(--emas);opacity:1}
+.sc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--abu);margin-bottom:8px}
+.sc-value{font-size:26px;font-weight:700;font-family:var(--mono);color:var(--putih)}
+.sc-value.hijau{color:#5ECC6E}
+.sc-value.emas{color:var(--emas-terang)}
+.sc-value.merah{color:#FF6B6B}
 
-        .brand-title {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+/* PROGRESS */
+.progress-section{background:var(--card);border:1px solid var(--border-emas);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.ps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.ps-title{font-size:13px;font-weight:600;color:var(--putih2)}
+.ps-pct{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--emas-terang)}
+.progress-bar-wrap{height:12px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05)}
+.progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hijau-muda),var(--emas-terang));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative}
+.progress-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.15) 50%,transparent 100%);border-radius:999px}
+.progress-legend{display:flex;gap:1.5rem;flex-wrap:wrap}
+.pl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--abu)}
+.pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-        .brand-title i {
-            font-size: 2.5rem;
-            color: var(--accent);
-        }
+/* CONTROLS */
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;color:var(--putih);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--emas)}
+.search-wrap input::placeholder{color:var(--abu)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:15px;pointer-events:none}
+.filter-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 13px;color:var(--abu);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
+.filter-btn:hover{border-color:var(--emas);color:var(--emas-terang)}
+.filter-btn.active{border-color:var(--emas);color:var(--hijau-gelap);background:var(--emas);font-weight:600}
+.sort-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--abu);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;appearance:none}
+.sort-select:focus{border-color:var(--emas)}
 
-        .brand-title h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
+/* TABLE */
+.table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+table{width:100%;border-collapse:collapse;min-width:780px}
+thead th{background:var(--hijau-tua);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--emas-terang);border-bottom:2px solid var(--emas);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(26,107,47,0.2)}
+td{padding:10px 14px;font-size:13px;color:var(--putih2);vertical-align:middle}
+.td-kode{font-family:var(--mono);font-size:11px;color:var(--emas);font-weight:500}
+.td-nama{font-weight:600;color:var(--putih);max-width:280px}
+.td-nama span{font-size:10px;font-weight:400;color:var(--abu);display:block;margin-top:1px}
+.td-num{font-family:var(--mono);font-size:12px;text-align:right}
+.td-num.total{color:var(--putih2)}
+.td-bar-cell{width:130px}
+.mini-bar-wrap{height:6px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.mini-bar{height:100%;border-radius:99px;transition:width .6s ease}
+.mini-bar.full{background:linear-gradient(90deg,#218A3C,#5ECC6E)}
+.mini-bar.high{background:linear-gradient(90deg,var(--hijau-muda),#8FD98F)}
+.mini-bar.mid{background:linear-gradient(90deg,var(--emas),var(--emas-terang))}
+.mini-bar.low{background:linear-gradient(90deg,#C0392B,#E74C3C)}
+.mini-pct{font-size:10px;color:var(--abu);font-family:var(--mono)}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;font-family:var(--mono);margin-left:4px;letter-spacing:.03em}
+.tag-full{background:rgba(94,204,110,.18);color:#5ECC6E;border:1px solid rgba(94,204,110,.3)}
+.tag-high{background:rgba(26,107,47,.25);color:#8FD98F;border:1px solid rgba(143,217,143,.25)}
+.tag-mid{background:var(--emas-muda);color:var(--emas-terang);border:1px solid var(--border-emas)}
+.tag-low{background:var(--merah-muda);color:#FF6B6B;border:1px solid rgba(192,57,43,.3)}
+.tag-zero{background:rgba(255,255,255,.05);color:var(--abu);border:1px solid var(--border)}
+.empty-state{text-align:center;padding:4rem;color:var(--abu);font-size:13px}
 
-        .brand-title p {
-            font-size: 0.875rem;
-            color: #CBD5E1;
-        }
+/* FOOTER */
+footer{text-align:center;padding:1.5rem 2rem;color:var(--abu);font-size:11px;border-top:1px solid var(--border);margin-top:2.5rem;background:var(--hijau-tua)}
+footer a{color:var(--emas-terang);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.footer-divider{margin:0 8px;opacity:.4}
 
-        .year-switcher {
-            display: flex;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px;
-            border-radius: var(--radius);
-            gap: 4px;
-            border: 1px solid rgba(255,255,255,0.2);
-            width: fit-content;
-        }
-
-        .year-btn {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 6px 16px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .year-btn.active {
-            background: var(--accent);
-            color: var(--primary-dark);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .controls-card {
-            background: var(--card-bg);
-            padding: 1.25rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            border: 1px solid var(--border-color);
-        }
-
-        @media(min-width: 768px) {
-            .controls-card {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        .filter-group, .search-group, .export-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-btn {
-            background: #F1F5F9;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 6px 12px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .filter-btn:hover {
-            background: #E2E8F0;
-            color: var(--text-main);
-        }
-
-        .filter-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            min-width: 240px;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 8px 12px 8px 36px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-export {
-            background: #F8FAFC;
-            border: 1px solid var(--border-color);
-            color: var(--primary);
-            padding: 6px 12px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .btn-export:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Desktop Table View */
-        .table-container {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.875rem;
-        }
-
-        th {
-            background: #F8FAFC;
-            color: var(--text-main);
-            font-weight: 700;
-            padding: 12px 16px;
-            border-bottom: 2px solid var(--border-color);
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        th:hover {
-            background: #F1F5F9;
-        }
-
-        th i.fa-sort {
-            margin-left: 4px;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-        }
-
-        td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: #F8FAFC;
-        }
-
-        /* Mobile Card View */
-        .card-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        @media(min-width: 768px) {
-            .card-grid {
-                display: none;
-            }
-            .table-container {
-                display: block;
-            }
-        }
-
-        @media(max-width: 767px) {
-            .table-container {
-                display: none;
-            }
-            .card-grid {
-                display: grid;
-            }
-        }
-
-        .urusan-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 1.25rem;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            border-left: 4px solid var(--primary);
-        }
-
-        .urusan-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-
-        .urusan-code {
-            font-size: 0.75rem;
-            background: #F1F5F9;
-            color: var(--text-muted);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .urusan-name {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--primary-dark);
-        }
-
-        .urusan-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            background: #F8FAFC;
-            padding: 8px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-label {
-            font-size: 0.6875rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .stat-val {
-            font-weight: 700;
-            font-size: 0.875rem;
-        }
-
-        .badge-progress {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .progress-high { background: #DCFCE7; color: #166534; }
-        .progress-med { background: #FEF9C3; color: #854D0E; }
-        .progress-low { background: #FEE2E2; color: #991B1B; }
-
-        footer {
-            text-align: center;
-            padding: 2rem 1rem;
-            color: var(--text-muted);
-            font-size: 0.8125rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 2rem;
-            background: white;
-        }
-
-        .loading, .error-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-muted);
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-    </style>
+@media(max-width:640px){
+  .site-header{padding:0 1rem;height:auto;min-height:60px;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
+  .hero-banner{padding:1.25rem 1rem}
+  .tahun-bar{padding:.75rem 1rem}
+  main{padding:1rem}
+  .hero-banner::before{display:none}
+  .last-updated{display:none}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="brand-title">
-                <i class="fa-solid fa-chart-pie"></i>
-                <div>
-                    <h1>Rekap DSSD e-Walidata</h1>
-                    <p>Kabupaten Berau, Kalimantan Timur</p>
-                </div>
-            </div>
-            <div class="year-switcher">
-                <button class="year-btn" onclick="switchYear('2023')">2023</button>
-                <button class="year-btn" onclick="switchYear('2024')">2024</button>
-                <button class="year-btn active" onclick="switchYear('2025')">2025</button>
-            </div>
-        </div>
-    </header>
+<header class="site-header">
+  <div>
+    <div class="logo-text">PEMERINTAH KAB. BERAU</div>
+    <div class="logo-sub">e-Walidata · Rekap Tahapan DSSD</div>
+  </div>
+  <div class="header-right">
+    <span class="live-dot" id="live-label">memuat...</span>
+    <span class="last-updated" id="last-updated"></span>
+  </div>
+</header>
 
-    <main>
-        <div class="controls-card">
-            <div class="filter-group">
-                <button class="filter-btn active" onclick="setFilter('all', this)">Semua</button>
-                <button class="filter-btn" onclick="setFilter('100', this)">100%</button>
-                <button class="filter-btn" onclick="setFilter('gte50', this)">&ge; 50%</button>
-                <button class="filter-btn" onclick="setFilter('lt50', this)">&lt; 50%</button>
-                <button class="filter-btn" onclick="setFilter('0', this)">0%</button>
-            </div>
-            <div class="search-group">
-                <div class="search-box">
-                    <i class="fa-solid fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Cari nama urusan..." oninput="handleSearch()">
-                </div>
-                <div class="export-group">
-                    <button class="btn-export" onclick="exportExcel()" title="Export ke Excel"><i class="fa-solid fa-file-excel"></i> Excel</button>
-                    <button class="btn-export" onclick="exportCSV()" title="Export ke CSV"><i class="fa-solid fa-file-csv"></i> CSV</button>
-                    <button class="btn-export" onclick="exportPDF()" title="Export ke PDF"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                </div>
-            </div>
-        </div>
+<div class="hero-banner">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">⭐ Batiwakkal · Kabupaten Berau (6403)</div>
+    <div class="hero-title">Rekap Keterisian Data Statistik Sektoral Daerah</div>
+    <div class="hero-sub">Dashboard monitoring progress DSSD · e-Walidata SIPD · Tahun <span id="tahun-hero">2025</span></div>
+  </div>
+</div>
 
-        <div id="contentArea">
-            <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data...</div>
-        </div>
-    </main>
+<div class="tahun-bar">
+  <span class="tahun-label">Tahun Data:</span>
+  <button class="tahun-btn" onclick="switchTahun('2023',this)">2023</button>
+  <button class="tahun-btn" onclick="switchTahun('2024',this)">2024</button>
+  <button class="tahun-btn active" onclick="switchTahun('2025',this)">2025</button>
+</div>
 
-    <footer>
-        &copy; 2026 Diskominfo Kabupaten Berau &bull; Bidang Persandian dan Statistik
-    </footer>
+<main>
+  <div class="stat-cards">
+    <div class="stat-card accent">
+      <div class="sc-label">Total Urusan</div>
+      <div class="sc-value emas" id="s-urusan">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Data Induk</div>
+      <div class="sc-value" id="s-induk">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Data Digunakan</div>
+      <div class="sc-value" id="s-digunakan">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Sudah Terisi</div>
+      <div class="sc-value hijau" id="s-terisi">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Belum Terisi</div>
+      <div class="sc-value emas" id="s-belum">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Tidak Aktif</div>
+      <div class="sc-value merah" id="s-disabled">—</div>
+    </div>
+  </div>
 
-    <script>
-        const EXCLUDED_CODES = ['3.28', '3.29', '5.06', '5.07', '9.01', '9.02', '9.03', '7.02', '7.03'];
-        let currentYear = '2025';
-        let rawData = [];
-        let filteredData = [];
-        let currentFilter = 'all';
-        let currentSearch = '';
-        let sortColumn = 'kodeurusan';
-        let sortAsc = true;
+  <div class="progress-section">
+    <div class="ps-header">
+      <div class="ps-title">📊 Progress Keterisian Keseluruhan</div>
+      <div class="ps-pct" id="overall-pct">—%</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
+    </div>
+    <div class="progress-legend">
+      <div class="pl-item"><div class="pl-dot" style="background:#5ECC6E"></div>Sudah terisi</div>
+      <div class="pl-item"><div class="pl-dot" style="background:var(--emas-terang)"></div>Belum terisi</div>
+      <div class="pl-item"><div class="pl-dot" style="background:rgba(255,255,255,0.15)"></div>Tidak aktif (disabled)</div>
+    </div>
+  </div>
 
-        async function loadData(year) {
-            currentYear = year;
-            document.querySelectorAll('.year-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.trim() === year);
-            });
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Cari nama urusan atau kode..." oninput="renderTable()">
+    </div>
+    <button class="filter-btn active" onclick="setFilter(this,'all')">Semua</button>
+    <button class="filter-btn" onclick="setFilter(this,'full')">100%</button>
+    <button class="filter-btn" onclick="setFilter(this,'high')">≥50%</button>
+    <button class="filter-btn" onclick="setFilter(this,'low')">&lt;50%</button>
+    <button class="filter-btn" onclick="setFilter(this,'zero')">0%</button>
+    <select class="sort-select" id="sort-sel" onchange="renderTable()">
+      <option value="kode">Urut: Kode</option>
+      <option value="pct-desc">Urut: % Terisi ↓</option>
+      <option value="pct-asc">Urut: % Terisi ↑</option>
+      <option value="jml-desc">Urut: Jml Data ↓</option>
+    </select>
+  </div>
 
-            const contentArea = document.getElementById('contentArea');
-            contentArea.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data tahun ' + year + '...</div>';
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Kode</th>
+          <th style="min-width:240px">Nama Urusan</th>
+          <th>Data Induk</th>
+          <th>Digunakan</th>
+          <th>Terisi</th>
+          <th>Belum Terisi</th>
+          <th>Ver. Walidata</th>
+          <th>Ver. Pembina</th>
+          <th>Final</th>
+          <th style="min-width:130px">% Keterisian</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="10"><div class="empty-state">Memuat data...</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
 
-            let fileUrl = 'data/rekap.json';
-            if (year === '2023') fileUrl = 'data/rekap-2023.json';
-            if (year === '2024') fileUrl = 'data/rekap-2024.json';
+<footer>
+  <strong style="color:var(--emas-terang)">Pemerintah Kabupaten Berau</strong>
+  <span class="footer-divider">·</span>
+  Data bersumber dari <a href="https://sipd.go.id/ewalidata/" target="_blank">e-Walidata SIPD</a>
+  <br><span id="footer-updated" style="margin-top:4px;display:inline-block;"></span>
+</footer>
 
-            try {
-                const response = await fetch(fileUrl);
-                if (!response.ok) throw new Error('Gagal memuat file data');
-                const json = await response.json();
-                
-                // Handle struktur data yang mungkin berbeda (array langsung atau object dengan property)
-                rawData = Array.isArray(json) ? json : (json.data || json.rekap || []);
-                
-                // Filter urusan yang dikecualikan
-                rawData = rawData.filter(item => !EXCLUDED_CODES.includes(String(item.kodeurusan).trim()));
+<script>
+let allData = [];
+let currentFilter = 'all';
+let currentTahun = '2025';
 
-                applyFilterAndSearch();
-            } catch (error) {
-                console.error(error);
-                contentArea.innerHTML = '<div class="error-state"><i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; color: #EAB308; margin-bottom: 0.5rem;"></i><br>Gagal memuat data untuk tahun ' + year + '. Pastikan file data tersedia.</div>';
-            }
-        }
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
 
-        function switchYear(year) {
-            loadData(year);
-        }
+const FILE_MAP = {
+  '2023': 'data/rekap-2023.json',
+  '2024': 'data/rekap-2024.json',
+  '2025': 'data/rekap.json',
+};
 
-        function setFilter(filter, btn) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            applyFilterAndSearch();
-        }
+function switchTahun(tahun, btn) {
+  currentTahun = tahun;
+  document.querySelectorAll('.tahun-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tahun-hero').textContent = tahun;
+  // Reset filter & search
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  currentFilter = 'all';
+  document.getElementById('overall-bar').style.width = '0%';
+  loadData(tahun);
+}
 
-        function handleSearch() {
-            currentSearch = document.getElementById('searchInput').value.toLowerCase();
-            applyFilterAndSearch();
-        }
+function pct(terisi, digunakan) {
+  const d = parseInt(digunakan) || 0;
+  return d === 0 ? 0 : Math.round((parseInt(terisi) / d) * 100);
+}
+function tagClass(p) {
+  if (p===100) return 'tag-full';
+  if (p>=50)   return 'tag-high';
+  if (p>0)     return 'tag-mid';
+  return 'tag-zero';
+}
+function barClass(p) {
+  if (p===100) return 'full';
+  if (p>=50)   return 'high';
+  if (p>0)     return 'mid';
+  return 'low';
+}
+function tagLabel(p) {
+  if (p===100) return 'PENUH';
+  if (p>=50)   return 'BAIK';
+  if (p>0)     return 'PROSES';
+  return 'KOSONG';
+}
+function fmt(n) { return parseInt(n).toLocaleString('id-ID'); }
 
-        function sortData(column) {
-            if (sortColumn === column) {
-                sortAsc = !sortAsc;
-            } else {
-                sortColumn = column;
-                sortAsc = true;
-            }
-            applyFilterAndSearch();
-        }
+function setFilter(btn, f) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = f;
+  renderTable();
+}
 
-        function applyFilterAndSearch() {
-            filteredData = rawData.filter(item => {
-                const name = (item.namaurusan || '').toLowerCase();
-                const code = String(item.kodeurusan || '');
-                const matchesSearch = name.includes(currentSearch) || code.includes(currentSearch);
+function matchFilter(row) {
+  const p = pct(row.ssd_terisi, row.ssd_digunakan);
+  if (currentFilter==='full') return p===100;
+  if (currentFilter==='high') return p>=50 && p<100;
+  if (currentFilter==='low')  return p>0 && p<50;
+  if (currentFilter==='zero') return p===0;
+  return true;
+}
 
-                if (!matchesSearch) return false;
+function renderTable() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const sort = document.getElementById('sort-sel').value;
+  let rows = allData
+    .filter(r => r.namaurusan.toLowerCase().includes(q) || r.kodeurusan.includes(q))
+    .filter(matchFilter);
 
-                const jml = parseInt(item.ssd_jml) || 0;
-                const terisi = parseInt(item.ssd_terisi) || 0;
-                const pct = jml > 0 ? (terisi / jml) * 100 : 0;
+  if (sort==='pct-desc') rows.sort((a,b)=>pct(b.ssd_terisi,b.ssd_digunakan)-pct(a.ssd_terisi,a.ssd_digunakan));
+  else if (sort==='pct-asc') rows.sort((a,b)=>pct(a.ssd_terisi,a.ssd_digunakan)-pct(b.ssd_terisi,b.ssd_digunakan));
+  else if (sort==='jml-desc') rows.sort((a,b)=>parseInt(b.ssd_jml)-parseInt(a.ssd_jml));
+  else rows.sort((a,b)=>a.kodeurusan.localeCompare(b.kodeurusan));
 
-                if (currentFilter === '100') return pct === 100;
-                if (currentFilter === 'gte50') return pct >= 50;
-                if (currentFilter === 'lt50') return pct < 50 && pct > 0;
-                if (currentFilter === '0') return pct === 0;
-                return true;
-            });
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML='<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => {
+    const p = pct(r.ssd_terisi, r.ssd_digunakan);
+    const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
+    return `<tr>
+      <td class="td-kode">${r.kodeurusan}</td>
+      <td class="td-nama">${short}<span>${r.namaurusan}</span></td>
+      <td class="td-num total">${fmt(r.ssd_jml)}</td>
+      <td class="td-num">${fmt(r.ssd_digunakan)}</td>
+      <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
+      <td class="td-num" style="color:var(--emas-terang)">${fmt(r.ssd_tidakterisi)}</td>
+      <td class="td-num">${fmt(r.ssd_ver_walidata)}</td>
+      <td class="td-num">${fmt(r.ssd_ver_pembina)}</td>
+      <td class="td-num">${fmt(r.ssd_final)}</td>
+      <td class="td-bar-cell">
+        <div class="mini-bar-wrap"><div class="mini-bar ${barClass(p)}" style="width:${p}%"></div></div>
+        <span class="mini-pct">${p}%</span><span class="tag ${tagClass(p)}">${tagLabel(p)}</span>
+      </td>
+    </tr>`;
+  }).join('');
+}
 
-            // Sorting
-            filteredData.sort((a, b) => {
-                let valA = a[sortColumn];
-                let valB = b[sortColumn];
+function renderStats() {
+  const tot_urusan    = allData.length;
+  const tot_induk     = allData.reduce((s,r)=>s+parseInt(r.ssd_jml),0);
+  const tot_digunakan = allData.reduce((s,r)=>s+parseInt(r.ssd_digunakan),0);
+  const tot_terisi    = allData.reduce((s,r)=>s+parseInt(r.ssd_terisi),0);
+  const tot_belum     = allData.reduce((s,r)=>s+parseInt(r.ssd_tidakterisi),0);
+  const tot_disabled  = allData.reduce((s,r)=>s+parseInt(r.ssd_disabled),0);
+  document.getElementById('s-urusan').textContent    = tot_urusan;
+  document.getElementById('s-induk').textContent     = fmt(tot_induk);
+  document.getElementById('s-digunakan').textContent = fmt(tot_digunakan);
+  document.getElementById('s-terisi').textContent    = fmt(tot_terisi);
+  document.getElementById('s-belum').textContent     = fmt(tot_belum);
+  document.getElementById('s-disabled').textContent  = fmt(tot_disabled);
+  const p = tot_digunakan>0 ? Math.round((tot_terisi/tot_digunakan)*100) : 0;
+  document.getElementById('overall-pct').textContent = p+'%';
+  setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
+}
 
-                if (sortColumn === 'kodeurusan' || sortColumn.startsWith('ssd_')) {
-                    valA = parseFloat(valA) || 0;
-                    valB = parseFloat(valB) || 0;
-                } else {
-                    valA = String(valA || '').toLowerCase();
-                    valB = String(valB || '').toLowerCase();
-                }
+async function loadData(tahun) {
+  tahun = tahun || '2025';
+  const file = FILE_MAP[tahun] || FILE_MAP['2025'];
+  document.getElementById('live-label').textContent = 'memuat...';
+  try {
+    const res = await fetch(file + '?_=' + Date.now());
+    const json = await res.json();
+    allData = (json.data || []).filter(r => !EXCLUDE_KODE.includes(r.kodeurusan));
 
-                if (valA < valB) return sortAsc ? -1 : 1;
-                if (valA > valB) return sortAsc ? 1 : -1;
-                return 0;
-            });
+    const meta = json.meta || {};
+    let updated = '—';
+    if (meta.last_updated && meta.last_updated !== '—') {
+      try {
+        const raw = meta.last_updated.includes('+') || meta.last_updated.endsWith('Z')
+          ? meta.last_updated : meta.last_updated + '+08:00';
+        updated = new Date(raw).toLocaleString('id-ID', {
+          timeZone:'Asia/Makassar', day:'2-digit', month:'long',
+          year:'numeric', hour:'2-digit', minute:'2-digit'
+        });
+      } catch(e) { updated = meta.last_updated; }
+    }
 
-            renderUI();
-        }
+    document.getElementById('live-label').textContent  = 'data tersedia';
+    document.getElementById('tahun-hero').textContent  = tahun;
+    document.getElementById('last-updated').textContent= updated!=='—' ? 'Per: '+updated+' WITA' : '';
+    document.getElementById('footer-updated').textContent = updated!=='—' ? 'Data per: '+updated+' WITA' : '';
 
-        function renderUI() {
-            const contentArea = document.getElementById('contentArea');
-            if (filteredData.length === 0) {
-                contentArea.innerHTML = '<div class="error-state">Tidak ada data yang sesuai dengan filter atau pencarian.</div>';
-                return;
-            }
+    renderStats();
+    renderTable();
+  } catch(e) {
+    document.getElementById('live-label').textContent = 'gagal memuat';
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
+  }
+}
 
-            let html = '';
-
-            // Desktop Table View
-            html += '<div class="table-container"><table><thead><tr>';
-            html += '<th onclick="sortData(\\'kodeurusan\\')">Kode <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'namaurusan\\')">Nama Urusan <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_jml\\')">Jml DSSD <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_terisi\\')">Terisi <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_tidakterisi\\')">Belum <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_digunakan\\')">Digunakan <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_ver_walidata\\')">Ver. Walidata <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_ver_pembina\\')">Ver. Pembina <i class="fa-solid fa-sort"></i></th>';
-            html += '<th onclick="sortData(\\'ssd_final\\')">Final <i class="fa-solid fa-sort"></i></th>';
-            html += '<th>Capaian</th>';
-            html += '</tr></thead><tbody>';
-
-            filteredData.forEach(item => {
-                const jml = parseInt(item.ssd_jml) || 0;
-                const terisi = parseInt(item.ssd_terisi) || 0;
-                const pct = jml > 0 ? Math.round((terisi / jml) * 100) : 0;
-                
-                let badgeClass = 'progress-low';
-                if (pct === 100) badgeClass = 'progress-high';
-                else if (pct >= 50) badgeClass = 'progress-med';
-
-                html += `<tr>
-                    <td><strong>${item.kodeurusan || '-'}</strong></td>
-                    <td>${item.namaurusan || '-'}</td>
-                    <td>${item.ssd_jml || 0}</td>
-                    <td>${item.ssd_terisi || 0}</td>
-                    <td>${item.ssd_tidakterisi || 0}</td>
-                    <td>${item.ssd_digunakan || 0}</td>
-                    <td>${item.ssd_ver_walidata || 0}</td>
-                    <td>${item.ssd_ver_pembina || 0}</td>
-                    <td>${item.ssd_final || 0}</td>
-                    <td><span class="badge-progress ${badgeClass}">${pct}%</span></td>
-                </tr>`;
-            });
-            html += '</tbody></table></div>';
-
-            // Mobile Card View
-            html += '<div class="card-grid">';
-            filteredData.forEach(item => {
-                const jml = parseInt(item.ssd_jml) || 0;
-                const terisi = parseInt(item.ssd_terisi) || 0;
-                const pct = jml > 0 ? Math.round((terisi / jml) * 100) : 0;
-                
-                let badgeClass = 'progress-low';
-                if (pct === 100) badgeClass = 'progress-high';
-                else if (pct >= 50) badgeClass = 'progress-med';
-
-                html += `<div class="urusan-card">
-                    <div class="urusan-card-header">
-                        <span class="urusan-code">${item.kodeurusan || '-'}</span>
-                        <span class="badge-progress ${badgeClass}">${pct}% Terisi</span>
-                    </div>
-                    <div class="urusan-name">${item.namaurusan || '-'}</div>
-                    <div class="urusan-stats-grid">
-                        <div class="stat-item"><span class="stat-label">Total</span><span class="stat-val">${item.ssd_jml || 0}</span></div>
-                        <div class="stat-item"><span class="stat-label">Terisi</span><span class="stat-val" style="color: #166534;">${item.ssd_terisi || 0}</span></div>
-                        <div class="stat-item"><span class="stat-label">Belum</span><span class="stat-val" style="color: #991B1B;">${item.ssd_tidakterisi || 0}</span></div>
-                    </div>
-                </div>`;
-            });
-            html += '</div>';
-
-            contentArea.innerHTML = html;
-        }
-
-        // Export Functions
-        function getExportData() {
-            return filteredData.map(item => ({
-                "Kode Urusan": item.kodeurusan || '',
-                "Nama Urusan": item.namaurusan || '',
-                "Jumlah DSSD": parseInt(item.ssd_jml) || 0,
-                "Terisi": parseInt(item.ssd_terisi) || 0,
-                "Tidak Terisi": parseInt(item.ssd_tidakterisi) || 0,
-                "Digunakan": parseInt(item.ssd_digunakan) || 0,
-                "Disabled": parseInt(item.ssd_disabled) || 0,
-                "Verifikasi Walidata": parseInt(item.ssd_ver_walidata) || 0,
-                "Verifikasi Pembina": parseInt(item.ssd_ver_pembina) || 0,
-                "Final": parseInt(item.ssd_final) || 0
-            }));
-        }
-
-        function exportExcel() {
-            if (filteredData.length === 0) {
-                alert('Tidak ada data untuk diexport.');
-                return;
-            }
-            const data = getExportData();
-            const worksheet = XLSX.utils.json_to_sheet(data);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap DSSD");
-            XLSX.writeFile(workbook, `Rekap_DSSD_Berau_${currentYear}.xlsx`);
-        }
-
-        function exportCSV() {
-            if (filteredData.length === 0) {
-                alert('Tidak ada data untuk diexport.');
-                return;
-            }
-            const data = getExportData();
-            const worksheet = XLSX.utils.json_to_sheet(data);
-            const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
-            const blob = new Blob([csvOutput], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', `Rekap_DSSD_Berau_${currentYear}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function exportPDF() {
-            if (filteredData.length === 0) {
-                alert('Tidak ada data untuk diexport.');
-                return;
-            }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('landscape', 'mm', 'a4');
-
-            doc.setFontSize(16);
-            doc.setTextColor(19, 77, 34);
-            doc.text(`Rekap DSSD e-Walidata Kabupaten Berau - Tahun ${currentYear}`, 14, 15);
-
-            doc.setFontSize(10);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 14, 22);
-
-            const tableHeaders = ['Kode', 'Nama Urusan', 'Jml', 'Terisi', 'Belum', 'Digunakan', 'Walidata', 'Pembina', 'Final'];
-            const tableRows = filteredData.map(item => [
-                item.kodeurusan || '',
-                item.namaurusan || '',
-                item.ssd_jml || 0,
-                item.ssd_terisi || 0,
-                item.ssd_tidakterisi || 0,
-                item.ssd_digunakan || 0,
-                item.ssd_ver_walidata || 0,
-                item.ssd_ver_pembina || 0,
-                item.ssd_final || 0
-            ]);
-
-            doc.autoTable({
-                head: [tableHeaders],
-                body: tableRows,
-                startY: 28,
-                theme: 'grid',
-                headStyles: { fillColor: [19, 77, 34], textColor: [255, 255, 255], fontStyle: 'bold' },
-                styles: { fontSize: 9, cellPadding: 3 },
-                columnStyles: {
-                    0: { cellWidth: 15 },
-                    1: { cellWidth: 'auto' },
-                    2: { cellWidth: 15, halign: 'center' },
-                    3: { cellWidth: 15, halign: 'center' },
-                    4: { cellWidth: 15, halign: 'center' },
-                    5: { cellWidth: 20, halign: 'center' },
-                    6: { cellWidth: 20, halign: 'center' },
-                    7: { cellWidth: 20, halign: 'center' },
-                    8: { cellWidth: 15, halign: 'center' }
-                }
-            });
-
-            doc.save(`Rekap_DSSD_Berau_${currentYear}.pdf`);
-        }
-
-        // Init load
-        loadData('2025');
-    </script>
+loadData('2025');
+</script>
 </body>
 </html>
-"""
-
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
