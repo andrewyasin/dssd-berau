@@ -98,6 +98,16 @@ main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
 .sort-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--abu);font-family:var(--font);font-size:12px;outline:none;cursor:pointer;appearance:none}
 .sort-select:focus{border-color:var(--emas)}
 
+/* EXPORT */
+.export-wrap{position:relative}
+.export-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border-emas);border-radius:8px;padding:7px 13px;color:var(--emas-terang);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:600;display:flex;align-items:center;gap:6px}
+.export-btn:hover{border-color:var(--emas);background:var(--emas-muda)}
+.export-menu{position:absolute;top:calc(100% + 6px);right:0;background:#123420;border:1px solid var(--border-emas);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.45);min-width:170px;overflow:hidden;z-index:50;display:none}
+.export-menu.open{display:block}
+.export-menu button{width:100%;text-align:left;background:transparent;border:none;padding:9px 14px;color:var(--putih2);font-family:var(--font);font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .12s}
+.export-menu button:hover{background:rgba(212,160,23,0.15);color:var(--emas-terang)}
+.export-menu button + button{border-top:1px solid var(--border)}
+
 /* TABLE */
 .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
 table{width:100%;border-collapse:collapse;min-width:780px}
@@ -230,6 +240,14 @@ footer a:hover{text-decoration:underline}
       <option value="pct-asc">Urut: % Terisi ↑</option>
       <option value="jml-desc">Urut: Jml Data ↓</option>
     </select>
+    <div class="export-wrap">
+      <button class="export-btn" id="export-toggle" onclick="toggleExportMenu(event)">⬇ Export</button>
+      <div class="export-menu" id="export-menu">
+        <button onclick="exportExcel()">📊 Excel (.xlsx)</button>
+        <button onclick="exportCSV()">📄 CSV</button>
+        <button onclick="exportPDF()">🧾 PDF</button>
+      </div>
+    </div>
   </div>
 
   <div class="table-wrap">
@@ -262,10 +280,14 @@ footer a:hover{text-decoration:underline}
   <br><span id="footer-updated" style="margin-top:4px;display:inline-block;"></span>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
 let allData = [];
 let currentFilter = 'all';
 let currentTahun = '2025';
+let currentRows = []; // rows yang sedang tampil (sudah difilter+diurutkan) - dipakai untuk export
 
 const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
 
@@ -340,6 +362,8 @@ function renderTable() {
   else if (sort==='pct-asc') rows.sort((a,b)=>pct(a.ssd_terisi,a.ssd_digunakan)-pct(b.ssd_terisi,b.ssd_digunakan));
   else if (sort==='jml-desc') rows.sort((a,b)=>parseInt(b.ssd_jml)-parseInt(a.ssd_jml));
   else rows.sort((a,b)=>a.kodeurusan.localeCompare(b.kodeurusan));
+
+  currentRows = rows;
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
@@ -419,6 +443,113 @@ async function loadData(tahun) {
     document.getElementById('tbody').innerHTML =
       '<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
   }
+}
+
+/* ===================== EXPORT ===================== */
+
+function toggleExportMenu(e) {
+  e.stopPropagation();
+  document.getElementById('export-menu').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.getElementById('export-menu').classList.remove('open');
+});
+
+// Data hasil export mengikuti filter/pencarian/urutan yang sedang aktif di layar.
+function getExportData() {
+  return currentRows.map(r => {
+    const p = pct(r.ssd_terisi, r.ssd_digunakan);
+    return {
+      'Kode': r.kodeurusan,
+      'Nama Urusan': r.namaurusan,
+      'Data Induk': parseInt(r.ssd_jml),
+      'Digunakan': parseInt(r.ssd_digunakan),
+      'Terisi': parseInt(r.ssd_terisi),
+      'Belum Terisi': parseInt(r.ssd_tidakterisi),
+      'Ver. Walidata': parseInt(r.ssd_ver_walidata),
+      'Ver. Pembina': parseInt(r.ssd_ver_pembina),
+      'Final': parseInt(r.ssd_final),
+      '% Keterisian': p
+    };
+  });
+}
+
+function exportFilename(ext) {
+  const now = new Date();
+  const stamp = now.toISOString().slice(0,10);
+  return `rekap-dssd-berau-${currentTahun}-${stamp}.${ext}`;
+}
+
+function exportExcel() {
+  document.getElementById('export-menu').classList.remove('open');
+  const data = getExportData();
+  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
+  const ws = XLSX.utils.json_to_sheet(data);
+  ws['!cols'] = [
+    {wch:8},{wch:45},{wch:11},{wch:11},{wch:9},{wch:12},{wch:13},{wch:13},{wch:8},{wch:13}
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, `DSSD ${currentTahun}`);
+  XLSX.writeFile(wb, exportFilename('xlsx'));
+}
+
+function exportCSV() {
+  document.getElementById('export-menu').classList.remove('open');
+  const data = getExportData();
+  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
+  const headers = Object.keys(data[0]);
+  const escapeCsv = (v) => {
+    const s = String(v);
+    return /[",\n;]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  };
+  const lines = [
+    headers.join(';'),
+    ...data.map(row => headers.map(h => escapeCsv(row[h])).join(';'))
+  ];
+  const csvContent = '\uFEFF' + lines.join('\r\n'); // BOM biar Excel baca UTF-8 dgn benar
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = exportFilename('csv');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportPDF() {
+  document.getElementById('export-menu').classList.remove('open');
+  const data = getExportData();
+  if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+  doc.setFontSize(13);
+  doc.setTextColor(19, 77, 34);
+  doc.text('Rekap Tahapan DSSD e-Walidata — KAB. BERAU', 40, 35);
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(`Tahun: ${currentTahun}  ·  Diexport: ${new Date().toLocaleString('id-ID')}`, 40, 50);
+
+  const headers = Object.keys(data[0]);
+  const body = data.map(row => headers.map(h => row[h]));
+
+  doc.autoTable({
+    head: [headers],
+    body: body,
+    startY: 65,
+    styles: { font: 'helvetica', fontSize: 7.5, cellPadding: 4 },
+    headStyles: { fillColor: [19, 77, 34], textColor: [240, 192, 64], fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [245, 247, 244] },
+    columnStyles: {
+      0: { cellWidth: 45 },
+      1: { cellWidth: 190 }
+    },
+    margin: { left: 40, right: 40 }
+  });
+
+  doc.save(exportFilename('pdf'));
 }
 
 loadData('2025');
