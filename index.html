@@ -295,8 +295,10 @@ footer a:hover{text-decoration:underline}
     <table>
       <thead>
         <tr>
+          <th>No</th>
           <th>Kode</th>
           <th style="min-width:240px">Nama Urusan</th>
+          <th style="min-width:200px">Dinas Penanggung Jawab</th>
           <th>Data Induk</th>
           <th>Digunakan</th>
           <th>Terisi</th>
@@ -308,7 +310,7 @@ footer a:hover{text-decoration:underline}
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr><td colspan="10"><div class="empty-state">Memuat data...</div></td></tr>
+        <tr><td colspan="12"><div class="empty-state">Memuat data...</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -330,7 +332,53 @@ let currentFilter = 'all';
 let currentTahun = '2025';
 let currentRows = []; // rows yang sedang tampil (sudah difilter+diurutkan) - dipakai untuk export
 
-const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03','7.01'];
+
+// Pemetaan kode urusan -> Dinas/OPD penanggung jawab (Kab. Berau)
+// Sumber: beraukab.go.id/headers/daftar-organisasi-perangkat-daerah
+// Catatan: beberapa urusan gabungan dipetakan ke >1 OPD, mohon dicek ulang jika ada perubahan nomenklatur.
+const DINAS_MAP = {
+  '1.01': 'Dinas Pendidikan',
+  '1.02': 'Dinas Kesehatan',
+  '1.03': 'Dinas Pekerjaan Umum dan Penataan Ruang',
+  '1.04': 'Dinas Perumahan dan Kawasan Permukiman',
+  '1.05': 'Satuan Polisi Pamong Praja',
+  '1.06': 'Dinas Sosial',
+  '2.07': 'Dinas Tenaga Kerja dan Transmigrasi',
+  '2.08': 'Dinas Pengendalian Penduduk, KB, Pemberdayaan Perempuan dan Perlindungan Anak',
+  '2.09': 'Dinas Pangan',
+  '2.10': 'Dinas Pertanahan',
+  '2.11': 'Dinas Lingkungan Hidup dan Kebersihan',
+  '2.12': 'Dinas Kependudukan dan Pencatatan Sipil',
+  '2.13': 'Dinas Pemberdayaan Masyarakat dan Kampung',
+  '2.14': 'Dinas Pengendalian Penduduk, KB, Pemberdayaan Perempuan dan Perlindungan Anak',
+  '2.15': 'Dinas Perhubungan',
+  '2.16': 'Dinas Komunikasi dan Informatika',
+  '2.17': 'Dinas Koperasi, Perindustrian dan Perdagangan',
+  '2.18': 'Dinas Penanaman Modal dan PTSP',
+  '2.19': 'Dinas Kepemudaan dan Olahraga',
+  '2.20': 'Dinas Komunikasi dan Informatika',
+  '2.21': 'Dinas Komunikasi dan Informatika',
+  '2.22': 'Dinas Kebudayaan dan Pariwisata',
+  '2.23': 'Dinas Perpustakaan dan Kearsipan',
+  '2.24': 'Dinas Perpustakaan dan Kearsipan',
+  '3.25': 'Dinas Perikanan',
+  '3.26': 'Dinas Kebudayaan dan Pariwisata',
+  '3.27': 'Dinas Tanaman Pangan, Hortikultura dan Peternakan / Dinas Perkebunan',
+  '3.30': 'Dinas Koperasi, Perindustrian dan Perdagangan',
+  '3.31': 'Dinas Koperasi, Perindustrian dan Perdagangan',
+  '3.32': 'Dinas Tenaga Kerja dan Transmigrasi',
+  '4.01': 'Sekretariat Daerah',
+  '4.02': 'Sekretariat DPRD',
+  '5.01': 'Badan Perencanaan, Penelitian dan Pengembangan',
+  '5.02': 'Badan Pengelolaan Keuangan dan Aset Daerah / Badan Pendapatan Daerah',
+  '5.03': 'Badan Kepegawaian dan Pengembangan SDM',
+  '5.04': 'Badan Kepegawaian dan Pengembangan SDM',
+  '5.05': 'Badan Perencanaan, Penelitian dan Pengembangan',
+  '6.01': 'Inspektorat',
+  '8.01': 'Badan Kesatuan Bangsa dan Politik',
+};
+function dinasName(kode) { return DINAS_MAP[kode] || '—'; }
 
 const FILE_MAP = {
   '2023': 'data/rekap-2023.json',
@@ -408,15 +456,17 @@ function renderTable() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML='<tr><td colspan="10"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="12"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
     return;
   }
-  tbody.innerHTML = rows.map(r => {
+  tbody.innerHTML = rows.map((r, i) => {
     const p = pct(r.ssd_terisi, r.ssd_digunakan);
     const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
     return `<tr>
+      <td class="td-num total">${i + 1}</td>
       <td class="td-kode">${r.kodeurusan}</td>
       <td class="td-nama">${short}<span>${r.namaurusan}</span></td>
+      <td style="font-size:12px">${dinasName(r.kodeurusan)}</td>
       <td class="td-num total">${fmt(r.ssd_jml)}</td>
       <td class="td-num">${fmt(r.ssd_digunakan)}</td>
       <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
@@ -482,7 +532,7 @@ async function loadData(tahun) {
   } catch(e) {
     document.getElementById('live-label').textContent = 'gagal memuat';
     document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="10"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
+      '<tr><td colspan="12"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
   }
 }
 
@@ -498,11 +548,13 @@ document.addEventListener('click', () => {
 
 // Data hasil export mengikuti filter/pencarian/urutan yang sedang aktif di layar.
 function getExportData() {
-  return currentRows.map(r => {
+  return currentRows.map((r, i) => {
     const p = pct(r.ssd_terisi, r.ssd_digunakan);
     return {
+      'No': i + 1,
       'Kode': r.kodeurusan,
       'Nama Urusan': r.namaurusan,
+      'Dinas Penanggung Jawab': dinasName(r.kodeurusan),
       'Data Induk': parseInt(r.ssd_jml),
       'Digunakan': parseInt(r.ssd_digunakan),
       'Terisi': parseInt(r.ssd_terisi),
@@ -527,7 +579,7 @@ function exportExcel() {
   if (!data.length) { alert('Tidak ada data untuk diexport.'); return; }
   const ws = XLSX.utils.json_to_sheet(data);
   ws['!cols'] = [
-    {wch:8},{wch:45},{wch:11},{wch:11},{wch:9},{wch:12},{wch:13},{wch:13},{wch:8},{wch:13}
+    {wch:5},{wch:8},{wch:45},{wch:35},{wch:11},{wch:11},{wch:9},{wch:12},{wch:13},{wch:13},{wch:8},{wch:13}
   ];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, `DSSD ${currentTahun}`);
@@ -584,8 +636,10 @@ function exportPDF() {
     headStyles: { fillColor: [19, 77, 34], textColor: [240, 192, 64], fontStyle: 'bold' },
     alternateRowStyles: { fillColor: [245, 247, 244] },
     columnStyles: {
-      0: { cellWidth: 45 },
-      1: { cellWidth: 190 }
+      0: { cellWidth: 25 },
+      1: { cellWidth: 40 },
+      2: { cellWidth: 150 },
+      3: { cellWidth: 130 }
     },
     margin: { left: 40, right: 40 }
   });
