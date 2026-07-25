@@ -297,8 +297,7 @@ footer a:hover{text-decoration:underline}
         <tr>
           <th>No</th>
           <th>Kode</th>
-          <th style="min-width:240px">Nama Urusan</th>
-          <th style="min-width:200px">Dinas Penanggung Jawab</th>
+          <th style="min-width:280px">Nama Urusan</th>
           <th>Data Induk</th>
           <th>Digunakan</th>
           <th>Terisi</th>
@@ -310,7 +309,7 @@ footer a:hover{text-decoration:underline}
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr><td colspan="12"><div class="empty-state">Memuat data...</div></td></tr>
+        <tr><td colspan="11"><div class="empty-state">Memuat data...</div></td></tr>
       </tbody>
     </table>
   </div>
@@ -332,7 +331,7 @@ let currentFilter = 'all';
 let currentTahun = '2025';
 let currentRows = []; // rows yang sedang tampil (sudah difilter+diurutkan) - dipakai untuk export
 
-const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03','7.01'];
+const EXCLUDE_KODE = ['3.28','3.29','5.06','5.07','9.01','9.02','9.03','7.02','7.03'];
 
 // Pemetaan kode urusan -> Dinas/OPD penanggung jawab (Kab. Berau)
 // Sumber: beraukab.go.id/headers/daftar-organisasi-perangkat-daerah
@@ -342,7 +341,7 @@ const DINAS_MAP = {
   '1.02': 'Dinas Kesehatan',
   '1.03': 'Dinas Pekerjaan Umum dan Penataan Ruang',
   '1.04': 'Dinas Perumahan dan Kawasan Permukiman',
-  '1.05': 'Satuan Polisi Pamong Praja',
+  '1.05': 'Satpol PP, BPBD, Damkar',
   '1.06': 'Dinas Sosial',
   '2.07': 'Dinas Tenaga Kerja dan Transmigrasi',
   '2.08': 'Dinas Pengendalian Penduduk, KB, Pemberdayaan Perempuan dan Perlindungan Anak',
@@ -377,6 +376,7 @@ const DINAS_MAP = {
   '5.05': 'Badan Perencanaan, Penelitian dan Pengembangan',
   '6.01': 'Inspektorat',
   '8.01': 'Badan Kesatuan Bangsa dan Politik',
+  '7.01': '13 Kecamatan: Tanjung Redeb, Sambaliung, Gunung Tabur, Teluk Bayur, Tabalar, Biatan, Talisayan, Batu Putih, Biduk-Biduk, Pulau Derawan, Maratua, Segah, Kelay',
 };
 function dinasName(kode) { return DINAS_MAP[kode] || '—'; }
 
@@ -456,7 +456,7 @@ function renderTable() {
 
   const tbody = document.getElementById('tbody');
   if (!rows.length) {
-    tbody.innerHTML='<tr><td colspan="12"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
+    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state">Tidak ada data yang cocok.</div></td></tr>';
     return;
   }
   tbody.innerHTML = rows.map((r, i) => {
@@ -465,8 +465,7 @@ function renderTable() {
     return `<tr>
       <td class="td-num total">${i + 1}</td>
       <td class="td-kode">${r.kodeurusan}</td>
-      <td class="td-nama">${short}<span>${r.namaurusan}</span></td>
-      <td style="font-size:12px">${dinasName(r.kodeurusan)}</td>
+      <td class="td-nama">${short}<span>${r.namaurusan}</span><span style="color:var(--emas-terang);font-weight:500">${dinasName(r.kodeurusan)}</span></td>
       <td class="td-num total">${fmt(r.ssd_jml)}</td>
       <td class="td-num">${fmt(r.ssd_digunakan)}</td>
       <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
@@ -532,7 +531,7 @@ async function loadData(tahun) {
   } catch(e) {
     document.getElementById('live-label').textContent = 'gagal memuat';
     document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="12"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
+      '<tr><td colspan="11"><div class="empty-state">⚠️ Gagal memuat data. Coba muat ulang halaman.</div></td></tr>';
   }
 }
 
