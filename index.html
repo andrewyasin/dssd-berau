@@ -28,8 +28,8 @@
   --mono:         'DM Mono', monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);min-height:100vh;font-size:14px;line-height:1.6}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+body{font-family:var(--font);background:var(--hijau-gelap);color:var(--putih);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;max-width:100vw}
 
 /* HEADER */
 .site-header{background:var(--hijau-tua);border-bottom:2px solid var(--emas);padding:0 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
@@ -102,7 +102,7 @@ main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
 .export-wrap{position:relative}
 .export-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border-emas);border-radius:8px;padding:7px 13px;color:var(--emas-terang);font-family:var(--font);font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:600;display:flex;align-items:center;gap:6px}
 .export-btn:hover{border-color:var(--emas);background:var(--emas-muda)}
-.export-menu{position:absolute;top:calc(100% + 6px);right:0;background:#123420;border:1px solid var(--border-emas);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.45);min-width:170px;overflow:hidden;z-index:50;display:none}
+.export-menu{position:fixed;background:#123420;border:1px solid var(--border-emas);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.45);min-width:190px;overflow:hidden;z-index:200;display:none}
 .export-menu.open{display:block}
 .export-menu button{width:100%;text-align:left;background:transparent;border:none;padding:10px 14px;color:var(--putih2);font-family:var(--font);font-size:12.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .12s}
 .export-menu button:hover{background:rgba(212,160,23,0.15);color:var(--emas-terang)}
@@ -539,9 +539,30 @@ async function loadData(tahun) {
 
 function toggleExportMenu(e) {
   e.stopPropagation();
-  document.getElementById('export-menu').classList.toggle('open');
+  const menu = document.getElementById('export-menu');
+  if (menu.classList.contains('open')) {
+    menu.classList.remove('open');
+    return;
+  }
+  const btn = document.getElementById('export-toggle');
+  const rect = btn.getBoundingClientRect();
+  const menuWidth = 190;
+  const margin = 10;
+  let left = rect.right - menuWidth;
+  if (left < margin) left = margin;
+  if (left + menuWidth > window.innerWidth - margin) left = window.innerWidth - menuWidth - margin;
+  let top = rect.bottom + 6;
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  menu.classList.add('open');
 }
 document.addEventListener('click', () => {
+  document.getElementById('export-menu').classList.remove('open');
+});
+window.addEventListener('scroll', () => {
+  document.getElementById('export-menu').classList.remove('open');
+}, true);
+window.addEventListener('resize', () => {
   document.getElementById('export-menu').classList.remove('open');
 });
 
