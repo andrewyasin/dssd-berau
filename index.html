@@ -235,11 +235,11 @@ footer a:hover{text-decoration:underline}
       <span class="search-icon">⌕</span>
       <input type="text" id="search" placeholder="Cari nama urusan atau kode..." oninput="renderTable()">
     </div>
-    <button class="filter-btn active" onclick="setFilter(this,'all')">Semua</button>
-    <button class="filter-btn" onclick="setFilter(this,'full')">100%</button>
-    <button class="filter-btn" onclick="setFilter(this,'high')">≥50%</button>
-    <button class="filter-btn" onclick="setFilter(this,'low')">&lt;50%</button>
-    <button class="filter-btn" onclick="setFilter(this,'zero')">0%</button>
+    <button class="filter-btn active" id="filter-all" onclick="setFilter(this,'all')">Semua</button>
+    <button class="filter-btn" id="filter-full" onclick="setFilter(this,'full')">100%</button>
+    <button class="filter-btn" id="filter-high" onclick="setFilter(this,'high')">≥50%</button>
+    <button class="filter-btn" id="filter-low" onclick="setFilter(this,'low')">&lt;50%</button>
+    <button class="filter-btn" id="filter-zero" onclick="setFilter(this,'zero')">0%</button>
     <select class="sort-select" id="sort-sel" onchange="renderTable()">
       <option value="kode">Urut: Kode</option>
       <option value="pct-desc">Urut: % Terisi ↓</option>
@@ -402,7 +402,10 @@ function switchTahun(tahun, btn) {
 
 function pct(terisi, digunakan) {
   const d = parseInt(digunakan) || 0;
-  return d === 0 ? 0 : Math.round((parseInt(terisi) / d) * 100);
+  const t = parseInt(terisi) || 0;
+  if (d === 0) return 0;
+  if (t >= d) return 100;
+  return Math.floor((t / d) * 100); // floor, bukan round — biar 99.6% tidak jadi "100% PENUH"
 }
 function tagClass(p) {
   if (p===100) return 'tag-full';
@@ -465,7 +468,7 @@ function renderTable() {
     return `<tr>
       <td class="td-num total">${i + 1}</td>
       <td class="td-kode">${r.kodeurusan}</td>
-      <td class="td-nama">${short}<span>${r.namaurusan}</span><span style="color:var(--emas-terang);font-weight:500">${dinasName(r.kodeurusan)}</span></td>
+      <td class="td-nama">${short}<span style="color:var(--emas-terang);font-weight:500;margin-top:2px">${dinasName(r.kodeurusan)}</span></td>
       <td class="td-num total">${fmt(r.ssd_jml)}</td>
       <td class="td-num">${fmt(r.ssd_digunakan)}</td>
       <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
@@ -499,6 +502,22 @@ function renderStats() {
   setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
 }
 
+function updateFilterCounts() {
+  const c = { full: 0, high: 0, low: 0, zero: 0 };
+  allData.forEach(r => {
+    const p = pct(r.ssd_terisi, r.ssd_digunakan);
+    if (p===100) c.full++;
+    else if (p>=50) c.high++;
+    else if (p>0) c.low++;
+    else c.zero++;
+  });
+  document.getElementById('filter-all').textContent  = `Semua (${allData.length})`;
+  document.getElementById('filter-full').textContent = `100% (${c.full})`;
+  document.getElementById('filter-high').textContent = `≥50% (${c.high})`;
+  document.getElementById('filter-low').textContent  = `<50% (${c.low})`;
+  document.getElementById('filter-zero').textContent = `0% (${c.zero})`;
+}
+
 async function loadData(tahun) {
   tahun = tahun || '2025';
   const file = FILE_MAP[tahun] || FILE_MAP['2025'];
@@ -527,6 +546,7 @@ async function loadData(tahun) {
     document.getElementById('footer-updated').textContent = updated!=='—' ? 'Data per: '+updated+' WITA' : '';
 
     renderStats();
+    updateFilterCounts();
     renderTable();
   } catch(e) {
     document.getElementById('live-label').textContent = 'gagal memuat';
