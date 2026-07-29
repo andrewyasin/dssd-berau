@@ -380,6 +380,24 @@ const DINAS_MAP = {
 };
 function dinasName(kode) { return DINAS_MAP[kode] || '—'; }
 
+// Urusan yang ditangani lebih dari satu OPD sekaligus.
+// Karena data sumber hanya agregat (tidak dipecah per-OPD), status per-OPD di bawah ini
+// adalah ESTIMASI berdasarkan % keterisian keseluruhan, bukan angka pasti per dinas.
+const MULTI_DINAS = {
+  '1.05': ['Satpol PP', 'BPBD', 'Damkar'],
+  '3.27': ['Dinas Tanaman Pangan, Hortikultura dan Peternakan', 'Dinas Perkebunan'],
+  '5.02': ['Badan Pengelolaan Keuangan dan Aset Daerah', 'Badan Pendapatan Daerah'],
+};
+
+function multiDinasNote(kode, p) {
+  const list = MULTI_DINAS[kode];
+  if (!list) return '';
+  const n = list.length;
+  if (p === 100) return `✓ Estimasi: ${n} OPD (semua) sudah selesai`;
+  if (p > 95)   return `Estimasi: salah satu dari ${n} OPD sudah selesai, sisanya hampir rampung`;
+  return `Estimasi: OPD terkait belum ada yang selesai sepenuhnya`;
+}
+
 const FILE_MAP = {
   '2023': 'data/rekap-2023.json',
   '2024': 'data/rekap-2024.json',
@@ -465,10 +483,12 @@ function renderTable() {
   tbody.innerHTML = rows.map((r, i) => {
     const p = pct(r.ssd_terisi, r.ssd_digunakan);
     const short = r.namaurusan.replace('URUSAN PEMERINTAHAN BIDANG ','').replace('URUSAN PEMERINTAHAN ','');
+    const note = multiDinasNote(r.kodeurusan, p);
+    const noteHtml = note ? `<span style="color:var(--abu);font-style:italic;font-size:9.5px;margin-top:2px">${note}</span>` : '';
     return `<tr>
       <td class="td-num total">${i + 1}</td>
       <td class="td-kode">${r.kodeurusan}</td>
-      <td class="td-nama">${short}<span style="color:var(--emas-terang);font-weight:500;margin-top:2px">${dinasName(r.kodeurusan)}</span></td>
+      <td class="td-nama">${short}<span style="color:var(--emas-terang);font-weight:500;margin-top:2px">${dinasName(r.kodeurusan)}</span>${noteHtml}</td>
       <td class="td-num total">${fmt(r.ssd_jml)}</td>
       <td class="td-num">${fmt(r.ssd_digunakan)}</td>
       <td class="td-num" style="color:#5ECC6E;font-weight:600">${fmt(r.ssd_terisi)}</td>
