@@ -522,20 +522,43 @@ function renderStats() {
   setTimeout(()=>{ document.getElementById('overall-bar').style.width = p+'%'; }, 300);
 }
 
-function updateFilterCounts() {
-  const c = { full: 0, high: 0, low: 0, zero: 0 };
+function computeOpdGroups() {
+  // Kelompokkan urusan berdasarkan nama OPD (dinasName), lalu jumlahkan data tiap grup.
+  // Ini supaya 1 OPD yang menangani beberapa urusan (mis. Diskominfo: Kominfo, Statistik,
+  // Persandian) dihitung sebagai 1 entitas, bukan 3 kali.
+  const groups = {};
   allData.forEach(r => {
-    const p = pct(r.ssd_terisi, r.ssd_digunakan);
+    const opd = dinasName(r.kodeurusan);
+    if (!groups[opd]) groups[opd] = { terisi: 0, digunakan: 0, kodes: [] };
+    groups[opd].terisi    += parseInt(r.ssd_terisi) || 0;
+    groups[opd].digunakan += parseInt(r.ssd_digunakan) || 0;
+    groups[opd].kodes.push(r.kodeurusan);
+  });
+  return groups;
+}
+
+function updateFilterCounts() {
+  const groups = computeOpdGroups();
+  const c = { full: 0, high: 0, low: 0, zero: 0 };
+  const names = Object.keys(groups);
+  names.forEach(opd => {
+    const g = groups[opd];
+    const p = pct(g.terisi, g.digunakan);
     if (p===100) c.full++;
     else if (p>=50) c.high++;
     else if (p>0) c.low++;
     else c.zero++;
   });
-  document.getElementById('filter-all').textContent  = `Semua (${allData.length})`;
+  const allBtn = document.getElementById('filter-all');
+  allBtn.textContent = `Semua (${names.length} OPD)`;
+  allBtn.title = `${names.length} OPD unik menangani ${allData.length} urusan`;
   document.getElementById('filter-full').textContent = `100% (${c.full})`;
   document.getElementById('filter-high').textContent = `≥50% (${c.high})`;
   document.getElementById('filter-low').textContent  = `<50% (${c.low})`;
   document.getElementById('filter-zero').textContent = `0% (${c.zero})`;
+  ['filter-full','filter-high','filter-low','filter-zero'].forEach(id => {
+    document.getElementById(id).title = 'Dihitung per OPD (gabungan semua urusan yang ditangani OPD tersebut), bukan per baris urusan';
+  });
 }
 
 async function loadData(tahun) {
