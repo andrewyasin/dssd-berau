@@ -59,11 +59,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .hero-sub{font-size:13px;color:var(--dtext2)}
 
 /* TAHUN SWITCHER (cerah, jembatan ke konten) */
-.tahun-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px}
+.tahun-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.75rem 2rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tahun-label{font-size:12px;color:var(--muted);font-weight:500;margin-right:4px}
 .tahun-btn{font-size:13px;font-weight:600;font-family:var(--mono);padding:5px 16px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.05em}
 .tahun-btn:hover{border-color:var(--emas);color:var(--emas-deep)}
 .tahun-btn.active{background:var(--emas);border-color:var(--emas);color:var(--hijau-tua)}
+.refresh-btn{font-size:12px;font-weight:600;padding:5px 14px;border-radius:999px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--hijau);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;margin-left:auto}
+.refresh-btn:hover:not(:disabled){border-color:var(--hijau);background:rgba(26,107,47,.06)}
+.refresh-btn:disabled{opacity:.55;cursor:not-allowed}
+.refresh-btn.spinning svg{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 /* MAIN */
 main{max-width:1280px;margin:0 auto;padding:1.75rem 2rem}
@@ -194,6 +199,13 @@ footer a:hover{text-decoration:underline}
   <button class="tahun-btn" onclick="switchTahun('2023',this)">2023</button>
   <button class="tahun-btn" onclick="switchTahun('2024',this)">2024</button>
   <button class="tahun-btn active" onclick="switchTahun('2025',this)">2025</button>
+  <button class="refresh-btn" id="refresh-btn" onclick="requestRefresh()" title="Minta data ditarik ulang dari SIPD">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px">
+      <path d="M4 4v5h5M20 20v-5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4.5 15a8 8 0 0014.9 2.5M19.5 9A8 8 0 004.6 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span id="refresh-label">Refresh Data</span>
+  </button>
 </div>
 
 <main>
@@ -738,6 +750,65 @@ function exportPDF() {
   doc.save(exportFilename('pdf'));
 }
 
+/* ===================== REFRESH BUTTON ===================== */
+// Ganti dengan URL Cloudflare Worker yang sudah di-deploy, contoh:
+// const REFRESH_API = 'https://dssd-refresh-proxy.namaanda.workers.dev';
+const REFRESH_API = 'https://dssd-refresh-proxy.namaanda.workers.dev';
+
+function setRefreshLabel(text, disabled, spinning) {
+  document.getElementById('refresh-label').textContent = text;
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = !!disabled;
+  btn.classList.toggle('spinning', !!spinning);
+}
+
+function startCooldownCountdown(seconds) {
+  let remaining = seconds;
+  setRefreshLabel(`Coba lagi ${Math.ceil(remaining/60)} menit lagi`, true, false);
+  const iv = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(iv);
+      setRefreshLabel('Refresh Data', false, false);
+    } else {
+      setRefreshLabel(`Coba lagi ${Math.ceil(remaining/60)} menit lagi`, true, false);
+    }
+  }, 1000);
+}
+
+async function checkRefreshStatus() {
+  try {
+    const res = await fetch(`${REFRESH_API}/status`);
+    const data = await res.json();
+    if (data.cooldownRemaining > 0) startCooldownCountdown(data.cooldownRemaining);
+  } catch (e) {
+    // Kalau Worker belum di-setup / offline, tombol tetap tampil normal, cuma nanti gagal saat diklik.
+  }
+}
+
+async function requestRefresh() {
+  setRefreshLabel('Meminta...', true, true);
+  try {
+    const res = await fetch(`${REFRESH_API}/trigger`, { method: 'POST' });
+    const data = await res.json();
+    if (res.status === 429) {
+      startCooldownCountdown(data.cooldownRemaining);
+      return;
+    }
+    if (!data.ok) {
+      alert('Gagal meminta refresh: ' + (data.error || 'Terjadi kesalahan.'));
+      setRefreshLabel('Refresh Data', false, false);
+      return;
+    }
+    alert('Refresh diminta! Data akan diperbarui dalam 1-2 menit — muat ulang halaman ini setelah itu.');
+    startCooldownCountdown(15 * 60);
+  } catch (e) {
+    alert('Gagal menghubungi server refresh. Coba lagi nanti.');
+    setRefreshLabel('Refresh Data', false, false);
+  }
+}
+
+checkRefreshStatus();
 loadData('2025');
 </script>
 </body>
